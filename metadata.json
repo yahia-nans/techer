@@ -1,0 +1,6 @@
+{
+  "name": "Tele-Masr 111: Tech Support Simulator",
+  "description": "Fast-paced bilingual (Arabic/English) Egyptian ISP call center & technical support simulator game.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
