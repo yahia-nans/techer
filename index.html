@@ -4,20 +4,3429 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tele-Masr 111 — Egyptian ISP Tech Support Simulator</title>
-    <meta name="description" content="Fast-paced bilingual Arabic & English call center tech support simulator inspired by Egyptian ISP culture." />
+    <meta
+      name="description"
+      content="Fast-paced bilingual Arabic & English call center tech support simulator inspired by Egyptian ISP culture."
+    />
     <meta property="og:title" content="Tele-Masr 111 — Egyptian ISP Tech Support Simulator" />
-    <meta property="og:description" content="Fast-paced bilingual Arabic & English call center tech support simulator inspired by Egyptian ISP culture." />
+    <meta
+      property="og:description"
+      content="Fast-paced bilingual Arabic & English call center tech support simulator inspired by Egyptian ISP culture."
+    />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="/src/index.css" />
+    <style>
+      :root {
+        --bg-canvas: #f1f5f9;
+        --bg-surface: #ffffff;
+        --bg-subtle: #f8fafc;
+        --bg-dark: #0f172a;
+        --bg-dark-2: #020617;
+        --border-hair: #e2e8f0;
+        --border-strong: #cbd5e1;
+        --text-main: #0f172a;
+        --text-muted: #475569;
+        --text-soft: #64748b;
+        --accent-blue: #2563eb;
+        --accent-blue-hover: #1d4ed8;
+        --accent-emerald: #059669;
+        --accent-emerald-hover: #047857;
+        --accent-amber: #d97706;
+        --accent-rose: #dc2626;
+        --font-sans: 'Plus Jakarta Sans', 'Cairo', 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif;
+        --font-ar: 'Cairo', 'Segoe UI', Tahoma, system-ui, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
 
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+        background: var(--bg-canvas);
+        color: var(--text-main);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      html[dir='rtl'] body {
+        font-family: var(--font-ar);
+      }
+
+      button,
+      input {
+        font-family: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.48;
+      }
+
+      .mono {
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .tabular {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* Title Screen */
+      .title-shell {
+        min-height: 100vh;
+        background: radial-gradient(circle at 80% 20%, #172554 0%, #090d16 55%, #020617 100%);
+        color: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px 24px;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      .title-topbar {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .brand-lockup {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #2563eb, #059669);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-weight: 800;
+        font-size: 14px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+
+      .brand-name {
+        font-size: 18px;
+        font-weight: 800;
+        color: #fff;
+        white-space: nowrap;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .btn-ghost-dark {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        background: rgba(15, 23, 42, 0.85);
+        color: #e2e8f0;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: background 150ms ease;
+      }
+
+      .btn-ghost-dark:hover {
+        background: #1e293b;
+      }
+
+      .btn-primary-blue {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: none;
+        background: var(--accent-blue);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: background 150ms ease;
+      }
+
+      .btn-primary-blue:hover {
+        background: var(--accent-blue-hover);
+      }
+
+      .title-grid {
+        max-width: 1200px;
+        width: 100%;
+        margin: auto;
+        padding: 28px 0;
+        display: grid;
+        grid-template-columns: 1.2fr 0.9fr;
+        gap: 36px;
+        align-items: center;
+      }
+
+      @media (max-width: 960px) {
+        .title-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .title-hero h1 {
+        margin: 12px 0;
+        font-size: clamp(28px, 4vw, 46px);
+        line-height: 1.15;
+        font-weight: 800;
+        color: #ffffff;
+        text-wrap: balance;
+      }
+
+      .title-hero p {
+        margin: 0 0 22px;
+        font-size: 16px;
+        line-height: 1.65;
+        color: #cbd5e1;
+        max-width: 600px;
+      }
+
+      .mode-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #94a3b8;
+        margin-bottom: 8px;
+      }
+
+      .mode-selector {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid #1e293b;
+        padding: 6px;
+        border-radius: 12px;
+        max-width: 540px;
+        margin-bottom: 22px;
+      }
+
+      @media (max-width: 560px) {
+        .mode-selector {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .mode-btn {
+        border: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: transparent;
+        color: #cbd5e1;
+        font-size: 13px;
+        font-weight: 700;
+        transition: background 150ms ease, color 150ms ease;
+      }
+
+      .mode-btn:hover {
+        background: #1e293b;
+        color: #fff;
+      }
+
+      .mode-btn.active {
+        background: var(--accent-blue);
+        color: #fff;
+      }
+
+      .btn-start {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 28px;
+        border-radius: 12px;
+        border: none;
+        background: var(--accent-emerald);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 800;
+        box-shadow: 0 10px 24px rgba(5, 150, 105, 0.35);
+        transition: background 150ms ease, transform 120ms ease;
+      }
+
+      .btn-start:hover {
+        background: var(--accent-emerald-hover);
+      }
+
+      .btn-start:active {
+        transform: scale(0.98);
+      }
+
+      .title-art-card {
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #1e293b;
+        background: #0f172a;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+      }
+
+      .title-art-footer {
+        padding: 12px 16px;
+        border-top: 1px solid #1e293b;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      .title-hint {
+        max-width: 1200px;
+        width: 100%;
+        margin: 0 auto;
+        font-size: 12px;
+        color: #94a3b8;
+      }
+
+      /* Game HUD */
+      .game-shell {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .hud-bar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: #ffffff;
+        border-bottom: 1px solid var(--border-hair);
+        padding: 10px 16px;
+      }
+
+      .hud-inner {
+        max-width: 1440px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .hud-left,
+      .hud-right {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .hud-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .hud-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--bg-dark);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .hud-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        padding-inline-start: 12px;
+        border-inline-start: 1px solid var(--border-hair);
+        font-size: 13px;
+      }
+
+      .metric-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .metric-label {
+        color: var(--text-soft);
+        font-size: 12px;
+      }
+
+      .metric-val {
+        font-weight: 800;
+        color: var(--text-main);
+      }
+
+      .btn-hud {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-hair);
+        background: #fff;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: background 140ms ease;
+      }
+
+      .btn-hud:hover {
+        background: #f8fafc;
+      }
+
+      /* 3-Column Desk */
+      .desk-grid {
+        flex: 1;
+        max-width: 1440px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 16px;
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 16px;
+        align-items: start;
+      }
+
+      .col-panel {
+        grid-column: span 4 / span 4;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-width: 0;
+      }
+
+      @media (max-width: 1024px) {
+        .col-panel {
+          grid-column: span 12 / span 12;
+        }
+      }
+
+      .card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-hair);
+        border-radius: 14px;
+        padding: 16px;
+      }
+
+      /* Caller Card */
+      .caller-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .caller-id-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .avatar-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        border: 1px solid var(--border-hair);
+        flex-shrink: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .caller-kicker {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent-blue);
+      }
+
+      .caller-name {
+        margin: 2px 0;
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text-main);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .caller-role {
+        margin: 0;
+        font-size: 12px;
+        color: var(--text-soft);
+      }
+
+      .mood-badge {
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .mood-calm { color: #047857; background: #ecfdf5; border-color: #a7f3d0; }
+      .mood-confused { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe; }
+      .mood-impatient { color: #92400e; background: #fffbeb; border-color: #fde68a; }
+      .mood-sarcastic { color: #334155; background: #f1f5f9; border-color: #cbd5e1; }
+      .mood-furious { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
+
+      .patience-wrap {
+        margin-top: 14px;
+      }
+
+      .patience-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .patience-track {
+        height: 10px;
+        width: 100%;
+        background: #f1f5f9;
+        border: 1px solid var(--border-hair);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .patience-fill {
+        height: 100%;
+        transition: width 150ms ease, background-color 150ms ease;
+      }
+
+      .symptom-row {
+        margin-top: 14px;
+        padding-top: 10px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 12px;
+      }
+
+      /* Router Hardware */
+      .router-antennas {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 32px;
+      }
+
+      .antenna {
+        width: 8px;
+        height: 18px;
+        background: #1e293b;
+        border-radius: 3px 3px 0 0;
+      }
+
+      .router-chassis {
+        background: #0f172a;
+        border: 1px solid #1e293b;
+        border-radius: 10px;
+        padding: 12px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        text-align: center;
+      }
+
+      .led-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .led-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: #334155;
+      }
+
+      .led-green { background: #34d399; box-shadow: 0 0 8px rgba(52, 211, 153, 0.9); }
+      .led-amber { background: #fbbf24; box-shadow: 0 0 8px rgba(251, 191, 36, 0.9); }
+      .led-red { background: #f43f5e; box-shadow: 0 0 9px rgba(244, 63, 94, 0.95); }
+      .led-blink-fast { animation: ledBlinkFast 0.7s infinite; }
+      .led-blink-slow { animation: ledBlinkSlow 1.4s infinite; }
+
+      .led-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: #94a3b8;
+      }
+
+      .reboot-box {
+        margin-top: 12px;
+      }
+
+      .reboot-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 700;
+        color: #b45309;
+        margin-bottom: 5px;
+      }
+
+      .reboot-track {
+        height: 8px;
+        background: #fef3c7;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .reboot-fill {
+        height: 100%;
+        background: #f59e0b;
+        transition: width 150ms linear;
+      }
+
+      .scan-banner {
+        margin-top: 12px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        color: #1e40af;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      /* CRM Telemetry */
+      .kv-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 7px 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 12px;
+      }
+
+      .kv-row:last-child {
+        border-bottom: none;
+      }
+
+      .kv-k {
+        color: var(--text-soft);
+      }
+
+      .kv-v {
+        font-weight: 700;
+        color: var(--text-main);
+        text-align: end;
+      }
+
+      /* Center Column: Headset + Transcript + Voice Console */
+      .transcript-card {
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 430px;
+      }
+
+      .headset-bar {
+        background: #0f172a;
+        color: #fff;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .wave-wrap {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+
+      .wave-bar {
+        width: 3px;
+        height: 5px;
+        background: #475569;
+        border-radius: 2px;
+      }
+
+      .wave-bar.speaking {
+        height: 16px;
+        background: #34d399;
+        animation: voiceWave 0.65s ease-in-out infinite;
+        transform-origin: bottom;
+      }
+
+      .btn-mini-dark {
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid #334155;
+        background: #1e293b;
+        color: #e2e8f0;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .btn-mini-dark:hover {
+        background: #334155;
+      }
+
+      .btn-voice-on {
+        border-color: #059669;
+        background: #059669;
+        color: #fff;
+      }
+
+      .transcript-subhead {
+        padding: 8px 14px;
+        background: #f8fafc;
+        border-bottom: 1px solid var(--border-hair);
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 700;
+        color: #334155;
+      }
+
+      .transcript-feed {
+        flex: 1;
+        overflow-y: auto;
+        padding: 14px;
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .msg-row {
+        display: flex;
+        flex-direction: column;
+        animation: messageIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .msg-row.agent {
+        align-items: flex-end;
+      }
+
+      .msg-row.caller {
+        align-items: flex-start;
+      }
+
+      .msg-bubble {
+        max-width: 90%;
+        border-radius: 12px;
+        padding: 10px 13px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        border: 1px solid var(--border-hair);
+        background: #fff;
+        color: var(--text-main);
+      }
+
+      .msg-row.agent .msg-bubble {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #ffffff;
+      }
+
+      .msg-system {
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid #bfdbfe;
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-size: 12px;
+        line-height: 1.5;
+        animation: messageIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .msg-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 11px;
+        margin-bottom: 4px;
+        opacity: 0.72;
+      }
+
+      .outcome-card {
+        border-radius: 12px;
+        padding: 14px;
+        border: 1px solid;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        animation: messageIn 180ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .outcome-resolved {
+        background: #ecfdf5;
+        border-color: #a7f3d0;
+        color: #064e3b;
+      }
+
+      .outcome-dropped {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #7f1d1d;
+      }
+
+      .btn-next-call {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: none;
+        background: #0f172a;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .btn-next-call:hover {
+        background: #1e293b;
+      }
+
+      /* Mic & Speech Console */
+      .mic-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 10px 0;
+      }
+
+      .btn-mic-hold {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: none;
+        background: var(--accent-blue);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        user-select: none;
+      }
+
+      .btn-mic-hold.listening {
+        background: var(--accent-rose);
+      }
+
+      .btn-mic-cont {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-hair);
+        background: #f8fafc;
+        color: var(--text-main);
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .btn-mic-cont.listening {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #b91c1c;
+      }
+
+      .stt-box {
+        border: 1px solid var(--border-hair);
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 10px 12px;
+        min-height: 70px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+      }
+
+      .intent-list {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border-hair);
+      }
+
+      .intent-chip {
+        padding: 2px 8px;
+        border-radius: 6px;
+        background: #d1fae5;
+        color: #065f46;
+        font-weight: 700;
+        font-size: 11px;
+      }
+
+      .text-form {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .text-input {
+        flex: 1;
+        min-width: 0;
+        padding: 9px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-strong);
+        font-size: 12.5px;
+        color: var(--text-main);
+        background: #fff;
+      }
+
+      .text-input:focus {
+        outline: 2px solid var(--accent-blue);
+        outline-offset: -1px;
+      }
+
+      .btn-send {
+        padding: 9px 14px;
+        border-radius: 8px;
+        border: none;
+        background: var(--bg-dark);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* Right Column: Action Cards */
+      .action-group-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-soft);
+        margin-bottom: 8px;
+      }
+
+      .action-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .action-btn {
+        width: 100%;
+        text-align: start;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border-hair);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        transition: border-color 140ms ease, background 140ms ease, transform 100ms ease;
+      }
+
+      .action-btn:hover:not(:disabled) {
+        border-color: var(--accent-blue);
+        background: #eff6ff;
+      }
+
+      .action-btn.res-btn {
+        background: #f8fafc;
+      }
+
+      .action-btn.res-btn:hover:not(:disabled) {
+        border-color: var(--accent-emerald);
+        background: #ecfdf5;
+      }
+
+      .action-btn:active:not(:disabled) {
+        transform: scale(0.99);
+      }
+
+      .action-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: #f1f5f9;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .action-icon.done {
+        background: #d1fae5;
+        color: #047857;
+      }
+
+      .action-title {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: var(--text-main);
+      }
+
+      .action-sub {
+        font-size: 11.5px;
+        color: var(--text-soft);
+        margin-top: 2px;
+      }
+
+      .warning-banner {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      /* Modals & Drawer */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(2, 6, 23, 0.72);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      .modal-card {
+        width: 100%;
+        max-width: 540px;
+        background: #fff;
+        border: 1px solid var(--border-hair);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+      }
+
+      .modal-head {
+        padding: 14px 18px;
+        background: #f8fafc;
+        border-bottom: 1px solid var(--border-hair);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 800;
+        font-size: 15px;
+      }
+
+      .modal-body {
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        max-height: 75vh;
+        overflow-y: auto;
+      }
+
+      .modal-foot {
+        padding: 14px 18px;
+        background: #f8fafc;
+        border-top: 1px solid var(--border-hair);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .drawer-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(2, 6, 23, 0.52);
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .drawer-panel {
+        width: 100%;
+        max-width: 420px;
+        height: 100%;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        box-shadow: -10px 0 32px rgba(0, 0, 0, 0.25);
+      }
+
+      .summary-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      @media (max-width: 560px) {
+        .summary-kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      .kpi-box {
+        border: 1px solid var(--border-hair);
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      /* Animations */
+      @keyframes ledBlinkFast {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0.18; }
+      }
+
+      @keyframes ledBlinkSlow {
+        0%, 60% { opacity: 1; }
+        61%, 100% { opacity: 0.25; }
+      }
+
+      @keyframes messageIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes subtleShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        50% { transform: translateX(4px); }
+        75% { transform: translateX(-3px); }
+      }
+
+      @keyframes voiceWave {
+        0%, 100% { transform: scaleY(0.32); }
+        50% { transform: scaleY(1); }
+      }
+
+      .shake {
+        animation: subtleShake 320ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+    </style>
   </head>
-  <body class="bg-slate-100 text-slate-900 antialiased selection:bg-blue-600 selection:text-white">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body>
+    <!-- TITLE SCREEN -->
+    <div id="title-screen" class="title-shell">
+      <div class="title-topbar">
+        <div class="brand-lockup">
+          <div class="brand-badge">111</div>
+          <span id="t-brand-name" class="brand-name">Tele-Masr 111</span>
+        </div>
+        <div class="top-actions">
+          <button id="btn-title-guide" type="button" class="btn-ghost-dark">Guide</button>
+          <button id="btn-title-mute" type="button" class="btn-ghost-dark">Mute</button>
+          <button id="btn-title-lang" type="button" class="btn-primary-blue">العربية</button>
+        </div>
+      </div>
+
+      <div class="title-grid">
+        <div class="title-hero">
+          <svg viewBox="0 0 220 34" height="32" aria-hidden="true">
+            <rect x="0" y="3" width="52" height="28" rx="6" fill="#2563EB"></rect>
+            <text x="26" y="22" text-anchor="middle" fill="#FFF" font-size="15" font-weight="800" font-family="monospace">111</text>
+            <line x1="64" y1="17" x2="92" y2="17" stroke="#10B981" stroke-width="3" stroke-linecap="round"></line>
+            <circle cx="104" cy="17" r="4" fill="#10B981"></circle>
+            <circle cx="118" cy="17" r="4" fill="#F59E0B"></circle>
+            <circle cx="132" cy="17" r="4" fill="#EF4444"></circle>
+          </svg>
+          <h1 id="t-start-title">Tele-Masr 111 Support Simulator</h1>
+          <p id="t-start-subtitle"></p>
+
+          <div id="t-mode-label" class="mode-label">Select Shift Mode</div>
+          <div class="mode-selector">
+            <button type="button" class="mode-btn" data-mode="quick" id="mode-quick"></button>
+            <button type="button" class="mode-btn active" data-mode="standard" id="mode-standard"></button>
+            <button type="button" class="mode-btn" data-mode="endless" id="mode-endless"></button>
+          </div>
+
+          <button id="btn-start-shift" type="button" class="btn-start">
+            <span>▶</span>
+            <span id="t-start-cta">Start Shift</span>
+          </button>
+        </div>
+
+        <!-- Inline SVG Cairo Night Telecom Desk Illustration -->
+        <div class="title-art-card">
+          <svg viewBox="0 0 640 360" width="100%" style="display:block" aria-hidden="true">
+            <defs>
+              <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0b1736" />
+                <stop offset="100%" stop-color="#172554" />
+              </linearGradient>
+              <linearGradient id="lampGlow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#fbbf24" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <rect width="640" height="360" fill="#0f172a" />
+            <!-- Window with Cairo Skyline & Cairo Tower -->
+            <rect x="110" y="18" width="420" height="190" rx="8" fill="url(#skyGrad)" stroke="#334155" stroke-width="4" />
+            <circle cx="155" cy="52" r="10" fill="#fde68a" />
+            <circle cx="160" cy="49" r="9" fill="#0b1736" />
+            <circle cx="230" cy="44" r="1.5" fill="#fff" opacity="0.8" />
+            <circle cx="310" cy="36" r="1.5" fill="#fff" opacity="0.7" />
+            <circle cx="465" cy="50" r="1.5" fill="#fff" opacity="0.8" />
+            <!-- Cairo Tower -->
+            <rect x="382" y="54" width="14" height="124" fill="#1e293b" />
+            <rect x="378" y="48" width="22" height="12" rx="3" fill="#334155" />
+            <line x1="389" y1="28" x2="389" y2="48" stroke="#f59e0b" stroke-width="2" />
+            <circle cx="389" cy="28" r="2.5" fill="#ef4444" />
+            <!-- City buildings -->
+            <rect x="125" y="120" width="45" height="86" fill="#1e293b" />
+            <rect x="180" y="138" width="55" height="68" fill="#172033" />
+            <rect x="255" y="110" width="60" height="96" fill="#1e293b" />
+            <rect x="425" y="128" width="85" height="78" fill="#172033" />
+            <!-- Nile Strip -->
+            <rect x="110" y="192" width="420" height="16" fill="#1d4ed8" opacity="0.45" />
+            <!-- Desk -->
+            <rect x="0" y="250" width="640" height="110" fill="#1e293b" />
+            <rect x="0" y="250" width="640" height="6" fill="#334155" />
+            <!-- Dual Monitors -->
+            <rect x="145" y="130" width="165" height="102" rx="6" fill="#020617" stroke="#475569" stroke-width="4" />
+            <rect x="218" y="232" width="20" height="18" fill="#475569" />
+            <rect x="195" y="246" width="66" height="5" rx="2" fill="#64748b" />
+            <polyline points="158,200 185,180 210,188 238,155 268,168 296,146" fill="none" stroke="#10b981" stroke-width="3" />
+            <rect x="158" y="144" width="65" height="8" rx="3" fill="#2563eb" />
+            <rect x="330" y="130" width="165" height="102" rx="6" fill="#020617" stroke="#475569" stroke-width="4" />
+            <rect x="402" y="232" width="20" height="18" fill="#475569" />
+            <rect x="379" y="246" width="66" height="5" rx="2" fill="#64748b" />
+            <rect x="345" y="146" width="135" height="12" rx="3" fill="#1e293b" />
+            <rect x="345" y="166" width="95" height="10" rx="3" fill="#334155" />
+            <circle cx="465" cy="195" r="14" fill="none" stroke="#10b981" stroke-width="4" />
+            <!-- Router on Left -->
+            <rect x="48" y="230" width="76" height="20" rx="4" fill="#020617" stroke="#475569" stroke-width="2" />
+            <rect x="60" y="206" width="4" height="24" fill="#334155" />
+            <rect x="108" y="206" width="4" height="24" fill="#334155" />
+            <circle cx="62" cy="240" r="2.5" fill="#10b981" />
+            <circle cx="74" cy="240" r="2.5" fill="#10b981" />
+            <circle cx="86" cy="240" r="2.5" fill="#f59e0b" />
+            <circle cx="98" cy="240" r="2.5" fill="#ef4444" />
+            <!-- Mint Tea Glass on Right -->
+            <polygon points="535,216 565,216 561,248 539,248" fill="#92400e" opacity="0.9" stroke="#cbd5e1" stroke-width="2" />
+            <ellipse cx="550" cy="218" rx="9" ry="4" fill="#10b981" />
+            <!-- Desk Lamp Glow -->
+            <polygon points="575,90 500,250 640,250" fill="url(#lampGlow)" />
+            <path d="M560 95 L595 75 L610 110 Z" fill="#f59e0b" />
+          </svg>
+          <div class="title-art-footer">
+            <span id="t-art-sub">Tech Support Operations Desk</span>
+            <span class="mono" style="color:#34d399">111 · LIVE</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="t-controls-hint" class="title-hint mono"></div>
+    </div>
+
+    <!-- MAIN GAME WORKSTATION -->
+    <div id="game-screen" class="game-shell hidden">
+      <header class="hud-bar">
+        <div class="hud-inner">
+          <div class="hud-left">
+            <div class="hud-brand">
+              <div class="hud-logo">111</div>
+              <div>
+                <div id="h-brand-title" style="font-size:14px;font-weight:800;line-height:1.1">Tele-Masr 111</div>
+                <div id="h-brand-sub" style="font-size:11px;color:#64748b">Operations Desk</div>
+              </div>
+            </div>
+
+            <div class="hud-metrics">
+              <div class="metric-item">
+                <span class="metric-label" id="h-lbl-timer">Shift</span>
+                <span id="h-val-timer" class="metric-val mono">02:30</span>
+              </div>
+              <div class="metric-item">
+                <span style="color:#f59e0b">★</span>
+                <span class="metric-label" id="h-lbl-csat">CSAT</span>
+                <span id="h-val-csat" class="metric-val mono">4.6</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label" id="h-lbl-score">Score</span>
+                <span id="h-val-score" class="metric-val mono">0</span>
+                <span id="h-val-streak" class="mono" style="color:#1d4ed8;font-weight:800"></span>
+              </div>
+              <div class="metric-item tabular" style="font-size:12px;color:#475569">
+                <span id="h-val-counts">0 Resolved · 0 Dropped</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hud-right">
+            <button id="btn-end-shift" type="button" class="btn-hud hidden" style="background:#0f172a;color:#fff;border-color:#0f172a">End Shift</button>
+            <button id="btn-audio-setup" type="button" class="btn-hud">Mic &amp; Voice</button>
+            <button id="btn-pause" type="button" class="btn-hud">Pause</button>
+            <button id="btn-restart" type="button" class="btn-hud">Restart</button>
+            <button id="btn-history" type="button" class="btn-hud">Ticket Log (0)</button>
+            <button id="btn-guide" type="button" class="btn-hud">?</button>
+            <button id="btn-mute" type="button" class="btn-hud">Mute</button>
+            <button id="btn-lang" type="button" class="btn-primary-blue">العربية</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="desk-grid">
+        <!-- Left Column: Caller + Router + CRM -->
+        <section class="col-panel">
+          <div id="caller-card" class="card">
+            <div class="caller-top">
+              <div class="caller-id-wrap">
+                <div id="caller-avatar" class="avatar-box"></div>
+                <div style="min-width:0">
+                  <div id="c-kicker" class="caller-kicker">Active Caller</div>
+                  <h2 id="c-name" class="caller-name">Caller</h2>
+                  <p id="c-role" class="caller-role">Role</p>
+                </div>
+              </div>
+              <div id="c-mood" class="mood-badge mood-impatient">Impatient</div>
+            </div>
+
+            <div class="patience-wrap">
+              <div class="patience-head">
+                <span id="c-patience-lbl" style="color:#475569">Customer Patience</span>
+                <span id="c-patience-val" class="mono">80%</span>
+              </div>
+              <div class="patience-track">
+                <div id="c-patience-bar" class="patience-fill" style="width:80%;background:#059669"></div>
+              </div>
+            </div>
+
+            <div class="symptom-row">
+              <span id="c-symptom-lbl" style="color:#64748b">Reported Symptom</span>
+              <span id="c-symptom-val" style="font-weight:700;text-align:end">...</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+              <span id="r-title" style="font-size:12px;font-weight:700;color:#475569">Customer Router Unit</span>
+              <span class="mono" style="font-size:11px;color:#94a3b8">HG8245-EG</span>
+            </div>
+            <div class="router-antennas">
+              <div class="antenna"></div>
+              <div class="antenna"></div>
+            </div>
+            <div class="router-chassis">
+              <div class="led-col"><div id="led-power" class="led-dot"></div><span id="lbl-led-power" class="led-label">PWR</span></div>
+              <div class="led-col"><div id="led-dsl" class="led-dot"></div><span id="lbl-led-dsl" class="led-label">DSL</span></div>
+              <div class="led-col"><div id="led-internet" class="led-dot"></div><span id="lbl-led-internet" class="led-label">NET</span></div>
+              <div class="led-col"><div id="led-los" class="led-dot"></div><span id="lbl-led-los" class="led-label">LOS</span></div>
+              <div class="led-col"><div id="led-wifi" class="led-dot"></div><span id="lbl-led-wifi" class="led-label">WIFI</span></div>
+            </div>
+            <div id="reboot-box" class="reboot-box hidden">
+              <div class="reboot-head">
+                <span id="r-reboot-lbl">10-Second Router Reboot in Progress...</span>
+                <span id="r-reboot-sec" class="mono">10s</span>
+              </div>
+              <div class="reboot-track">
+                <div id="r-reboot-fill" class="reboot-fill" style="width:0%"></div>
+              </div>
+            </div>
+            <div id="scan-banner" class="scan-banner hidden">Running Line &amp; Port Diagnostics...</div>
+          </div>
+
+          <div class="card">
+            <div id="crm-title" style="font-size:12px;font-weight:800;color:#334155;margin-bottom:8px">CRM &amp; Line Telemetry</div>
+            <div class="kv-row"><span id="k-nid" class="kv-k">National ID (14 Digits)</span><span id="v-nid" class="kv-v mono">...</span></div>
+            <div class="kv-row"><span id="k-pkg" class="kv-k">Package Tier</span><span id="v-pkg" class="kv-v">—</span></div>
+            <div class="kv-row"><span id="k-bill" class="kv-k">Billing Status</span><span id="v-bill" class="kv-v">—</span></div>
+            <div class="kv-row"><span id="k-quota" class="kv-k">Quota Status</span><span id="v-quota" class="kv-v">—</span></div>
+            <div class="kv-row"><span id="k-att" class="kv-k">Attenuation</span><span id="v-att" class="kv-v mono">...</span></div>
+            <div class="kv-row"><span id="k-snr" class="kv-k">SNR Margin</span><span id="v-snr" class="kv-v mono">...</span></div>
+          </div>
+        </section>
+
+        <!-- Center Column: Headset + Transcript + Voice/Text Input -->
+        <section class="col-panel">
+          <div class="card transcript-card">
+            <div class="headset-bar">
+              <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                <div class="wave-wrap" id="wave-bars">
+                  <span class="wave-bar"></span>
+                  <span class="wave-bar"></span>
+                  <span class="wave-bar"></span>
+                  <span class="wave-bar"></span>
+                  <span class="wave-bar"></span>
+                </div>
+                <span id="speaker-status" style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Headset Ready</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+                <button id="btn-repeat-line" type="button" class="btn-mini-dark">Repeat Last Line</button>
+                <button id="btn-voice-toggle" type="button" class="btn-mini-dark btn-voice-on">Voice</button>
+              </div>
+            </div>
+
+            <div class="transcript-subhead">
+              <span id="t-transcript-title">Live Call Transcript</span>
+              <span id="t-call-clock" class="mono">00:00</span>
+            </div>
+
+            <div id="transcript-feed" class="transcript-feed"></div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+              <span id="m-title" style="font-size:12px;font-weight:800;color:#1e293b">Live Voice / Input Parser</span>
+              <span id="m-status-lbl" style="font-size:11px;font-weight:700;color:#64748b">Hold / Tap Mic (or Space)</span>
+            </div>
+
+            <div class="mic-grid">
+              <button id="btn-mic-hold" type="button" class="btn-mic-hold">Hold / Tap Mic (or Space)</button>
+              <button id="btn-mic-cont" type="button" class="btn-mic-cont">Continuous Mic</button>
+            </div>
+
+            <div class="stt-box">
+              <div id="stt-text" style="color:#64748b">Hold Space or tap/hold Mic and speak in English or Egyptian Arabic...</div>
+              <div id="stt-intents" class="intent-list hidden"></div>
+              <div id="stt-hint" class="hidden" style="color:#b45309;font-size:11.5px;font-weight:600;padding-top:4px;border-top:1px solid #e2e8f0"></div>
+              <div id="stt-err" class="hidden" style="color:#b91c1c;font-size:11.5px;font-weight:600;padding-top:4px;border-top:1px solid #e2e8f0"></div>
+            </div>
+
+            <form id="text-form" class="text-form">
+              <input id="text-input" type="text" class="text-input" placeholder="Type in English or Arabic..." />
+              <button id="btn-send" type="submit" class="btn-send">Send</button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Right Column: Support Actions -->
+        <section class="col-panel">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <h3 id="a-title" style="margin:0;font-size:14px;font-weight:800">Support Desk Actions</h3>
+              <button id="btn-quick-next" type="button" class="btn-hud hidden" style="background:#059669;color:#fff;border-color:#059669">Next Call</button>
+            </div>
+
+            <div id="a-diag-title" class="action-group-title">Step 1 · Investigate &amp; Calm</div>
+            <div id="diag-actions" class="action-list"></div>
+
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid #f1f5f9">
+              <div id="a-res-title" class="action-group-title">Step 2 · Fix &amp; Close Ticket</div>
+              <div id="res-actions" class="action-list"></div>
+            </div>
+
+            <div id="patience-warn" class="warning-banner hidden"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- AUDIO & MICROPHONE SETUP MODAL -->
+    <div id="modal-audio" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-head">
+          <span id="ma-title">Headset &amp; Microphone Setup</span>
+          <button id="ma-close" type="button" class="btn-hud">✕</button>
+        </div>
+        <div class="modal-body">
+          <p id="ma-desc" style="margin:0;font-size:13.5px;color:#475569;line-height:1.55"></p>
+          <div style="border:1px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:800">
+              <span id="ma-spk-title">Speaker &amp; Caller Voice (TTS)</span>
+              <span id="ma-spk-status" style="font-size:12px;color:#059669">Ready</span>
+            </div>
+            <div id="ma-spk-voice" class="mono" style="font-size:11px;color:#64748b"></div>
+            <div>
+              <button id="ma-btn-test" type="button" class="btn-hud">Test Caller Voice</button>
+            </div>
+          </div>
+
+          <div style="border:1px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px">
+            <div id="ma-mic-title" style="font-size:13px;font-weight:800">Agent Microphone (Speech-to-Text)</div>
+            <div id="ma-mic-status" style="font-size:12px;font-weight:600;color:#475569">Permission not requested yet</div>
+            <div>
+              <button id="ma-btn-mic" type="button" class="btn-primary-blue">Allow Microphone</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button id="ma-btn-textonly" type="button" class="btn-hud">Continue with Text &amp; Buttons Only</button>
+          <button id="ma-btn-start" type="button" class="btn-primary-blue" style="background:#059669;padding:10px 18px;font-size:13px">Start Shift with Headset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW TO PLAY MODAL -->
+    <div id="modal-guide" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-head">
+          <span id="mg-title">How to Survive the 111 Desk</span>
+          <button id="mg-close" type="button" class="btn-hud">✕</button>
+        </div>
+        <div class="modal-body">
+          <p id="mg-intro" style="margin:0;font-size:13.5px;color:#475569;line-height:1.55"></p>
+          <div id="mg-rules" style="display:flex;flex-direction:column;gap:8px;font-size:13px"></div>
+          <div id="mg-hint" class="mono" style="font-size:11.5px;color:#64748b"></div>
+        </div>
+        <div class="modal-foot" style="justify-content:flex-end">
+          <button id="mg-ok" type="button" class="btn-send">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAUSE MODAL -->
+    <div id="modal-pause" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width:380px;text-align:center">
+        <div class="modal-body" style="padding:24px">
+          <h2 id="mp-title" style="margin:0;font-size:20px;font-weight:800">Shift Paused</h2>
+          <p id="mp-desc" style="margin:0;font-size:13.5px;color:#475569;line-height:1.55"></p>
+          <button id="mp-resume" type="button" class="btn-start" style="width:100%;justify-content:center;padding:11px;font-size:14px">Resume</button>
+          <button id="mp-end" type="button" class="btn-hud" style="width:100%;justify-content:center;padding:10px">End Shift</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SHIFT SUMMARY MODAL -->
+    <div id="modal-summary" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width:660px">
+        <div style="background:#0f172a;color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <div>
+            <div id="ms-brand" style="font-size:12px;font-weight:700;color:#34d399">Tele-Masr 111</div>
+            <h2 id="ms-title" style="margin:4px 0 0;font-size:22px;font-weight:800">End of Shift Report</h2>
+          </div>
+          <div style="text-align:end">
+            <div id="ms-csat" class="mono" style="font-size:22px;font-weight:800;color:#fbbf24">★ 4.6</div>
+            <div id="ms-rank" style="font-size:12px;color:#cbd5e1">Rank</div>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="summary-kpis">
+            <div class="kpi-box"><div id="ms-k-score" style="font-size:11.5px;color:#64748b">Total Score</div><div id="ms-v-score" class="mono" style="font-size:22px;font-weight:800;margin-top:4px">0</div></div>
+            <div class="kpi-box"><div id="ms-k-res" style="font-size:11.5px;color:#64748b">Resolved</div><div id="ms-v-res" class="mono" style="font-size:22px;font-weight:800;color:#059669;margin-top:4px">0</div></div>
+            <div class="kpi-box"><div id="ms-k-drop" style="font-size:11.5px;color:#64748b">Hung Up</div><div id="ms-v-drop" class="mono" style="font-size:22px;font-weight:800;color:#dc2626;margin-top:4px">0</div></div>
+            <div class="kpi-box"><div id="ms-k-strk" style="font-size:11.5px;color:#64748b">Best Streak</div><div id="ms-v-strk" class="mono" style="font-size:22px;font-weight:800;color:#1d4ed8;margin-top:4px">0x</div></div>
+          </div>
+          <div class="kv-row"><span id="ms-k-calls" class="kv-k">Calls Handled</span><span id="ms-v-calls" class="kv-v mono">0</span></div>
+          <div class="kv-row"><span id="ms-k-reboots" class="kv-k">Router Reboots Ordered</span><span id="ms-v-reboots" class="kv-v mono">0</span></div>
+          <div class="kv-row"><span id="ms-k-ids" class="kv-k">14-Digit IDs Verified</span><span id="ms-v-ids" class="kv-v mono">0</span></div>
+          <div id="ms-note" style="padding:12px 14px;border-radius:10px;background:#fffbeb;border:1px solid #fde68a;color:#78350f;font-size:13px;font-weight:600"></div>
+        </div>
+        <div class="modal-foot">
+          <button id="ms-back" type="button" class="btn-hud">Main Menu</button>
+          <button id="ms-again" type="button" class="btn-start" style="padding:10px 22px;font-size:14px">Play Again</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TICKET HISTORY DRAWER -->
+    <div id="drawer-history" class="drawer-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="drawer-panel">
+        <div class="modal-head">
+          <span id="dh-title">Shift Ticket Log</span>
+          <button id="dh-close" type="button" class="btn-hud">✕</button>
+        </div>
+        <div id="dh-list" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px"></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // ---------- 1. BILINGUAL UI DICTIONARY ----------
+        var UI = {
+          en: {
+            brandTitle: 'Tele-Masr 111',
+            brandSubtitle: 'Tech Support Operations Desk',
+            langToggle: 'العربية',
+            shiftTimer: 'Shift',
+            csatLabel: 'CSAT',
+            scoreLabel: 'Score',
+            resolvedLabel: 'Resolved',
+            droppedLabel: 'Dropped',
+            pauseBtn: 'Pause',
+            resumeBtn: 'Resume',
+            restartShiftBtn: 'Restart',
+            historyBtn: 'Ticket Log',
+            muteBtn: 'Mute',
+            unmuteBtn: 'Unmute',
+            startTitle: 'Tele-Masr 111 Support Simulator',
+            startSubtitle:
+              'Step into Cairo’s busiest ISP helpdesk. Speak directly into your mic in English or Egyptian Arabic, diagnose red LOS lights, verify 14-digit National IDs, and decide when "Restart the router for 10 seconds" actually works.',
+            selectShiftMode: 'Select Shift Mode',
+            modeQuick: '90s Rush Shift',
+            modeStandard: '150s Full Shift',
+            modeEndless: 'Endless Free-Play',
+            startShiftCta: 'Start Shift',
+            controlsHint: 'Hold/Tap Mic (or Space) to Talk · 1-8 Actions · N Next Call · P Pause · L Language',
+            incomingCallLabel: 'Active Caller',
+            patienceLabel: 'Customer Patience',
+            lineStatusLabel: 'Reported Symptom',
+            routerUnitTitle: 'Customer Router Unit',
+            rebootingBanner: '10-Second Router Reboot in Progress...',
+            checkingLineBanner: 'Running Central Office Line & Port Diagnostics...',
+            accountSnapshotTitle: 'CRM & Line Telemetry',
+            nationalIdLabel: 'National ID (14 Digits)',
+            packageLabel: 'Package Tier',
+            billingLabel: 'Billing Status',
+            quotaLabel: 'Quota Status',
+            attenuationLabel: 'Attenuation',
+            snrLabel: 'SNR Margin',
+            unverifiedText: 'Not requested yet',
+            notScannedText: 'Run Line Check',
+            transcriptTitle: 'Live Call Transcript',
+            agentLabel: 'You (Agent)',
+            systemLabel: 'Desk System',
+            actionsTitle: 'Support Desk Actions',
+            diagnosticsGroup: 'Step 1 · Investigate & Calm',
+            resolutionGroup: 'Step 2 · Fix & Close Ticket',
+            nextCallBtn: 'Answer Next Call (N)',
+            quickNextBtn: 'Next Call',
+            endShiftNowBtn: 'End Shift',
+            callResolvedTag: 'Ticket Resolved',
+            callDroppedTag: 'Caller Hung Up',
+            historyDrawerTitle: 'Shift Ticket Log',
+            historyEmpty: 'No tickets closed yet in this shift.',
+            closeBtn: 'Close',
+            howToTitle: 'How to Survive the 111 Desk',
+            howToIntro:
+              'Every caller has a hidden technical or billing root cause. Speak via Microphone, type in Arabic or English, or press action buttons 1–8!',
+            howToRules: [
+              '1. Hold Space (or tap/hold Mic) and speak naturally—e.g. "Could you restart the router for 10 seconds?" or "معلش يا فندم رستر الراوتر".',
+              '2. Ask for National ID (14 digits) to reveal package tier, unpaid invoices, and remaining quota.',
+              '3. Run Line & Port Check to see true Attenuation, SNR Margin, and Red LOS status.',
+              '4. De-escalate angry callers early—calm them down so they speak slower and share their ID.',
+              '5. Only suggest the 10-Second Router Reboot when it makes sense! Red LOS or repeat-rebooters lose patience fast.'
+            ],
+            summaryTitle: 'End of Shift Report',
+            summaryCalls: 'Calls Handled',
+            summaryResolved: 'Resolved',
+            summaryDropped: 'Hung Up',
+            summaryScore: 'Total Score',
+            summaryBestStreak: 'Best Streak',
+            summaryReboots: 'Router Reboots Ordered',
+            summaryIds: '14-Digit IDs Verified',
+            summaryPlayAgain: 'Play Again',
+            summaryBackTitle: 'Main Menu',
+            pausedTitle: 'Shift Paused',
+            pausedDesc: 'Take a sip of mint tea. Your active call timer and patience drain are frozen.',
+            audioSetupBtn: 'Mic & Voice',
+            audioModalTitle: 'Headset & Microphone Setup',
+            audioModalDesc:
+              'Enable your microphone to speak directly with callers in Arabic or English, and test your speaker output for live emotional caller voices.',
+            speakerSectionTitle: 'Speaker & Caller Voice (TTS)',
+            speakerSupported: 'Speech Synthesis ready',
+            speakerUnsupported: 'Browser TTS unavailable — text transcript active',
+            testSpeakerBtn: 'Test Caller Voice',
+            testSpeakerPhrase: 'Hello! Welcome to Tele-Masr 111 support desk. Audio is working clearly!',
+            micSectionTitle: 'Agent Microphone (Speech-to-Text)',
+            micGranted: 'Microphone permission granted',
+            micPending: 'Permission not requested yet',
+            micDenied: 'Microphone blocked — use text box or action buttons',
+            micUnsupported: 'Speech Recognition unsupported in this browser — use text input & buttons',
+            enableMicBtn: 'Allow Microphone',
+            continueWithAudioBtn: 'Start Shift with Headset',
+            continueTextOnlyBtn: 'Continue with Text & Buttons Only',
+            callerSpeakingLabel: 'Caller Speaking...',
+            speakerReadyLabel: 'Headset Ready',
+            voiceMutedLabel: 'Voice Muted',
+            repeatLineBtn: 'Repeat Last Line',
+            voiceToggleLabel: 'Voice',
+            micHoldLabel: 'Hold / Tap Mic (or Space)',
+            micListeningLabel: 'Listening...',
+            micToggleListenBtn: 'Continuous Mic',
+            micStopListenBtn: 'Stop Mic',
+            liveTranscriptLabel: 'Live Voice / Input Parser',
+            liveTranscriptPlaceholder: 'Hold Space or tap/hold Mic and speak in English or Egyptian Arabic...',
+            recognizedIntentLabel: 'Recognized Intent',
+            noIntentDetected: 'Didn’t catch a support action—try mentioning router restart, National ID, line check, billing, or calming the caller.',
+            textFallbackPlaceholder: 'Type in English or Arabic (e.g. "restart router 10 seconds")...',
+            sendBtn: 'Send',
+            micErrorNotAllowed: 'Mic permission blocked (allow microphone in browser settings). You can still type or click actions.',
+            micErrorUnsupported: 'Speech recognition is unsupported in this browser. Type below or click actions.',
+            micErrorGeneric: 'Speech recognition paused or unavailable here. Type your reply below or click actions.',
+            patienceWarn: 'Warning: Caller patience critical! De-escalate or resolve immediately.',
+            ledPower: 'PWR',
+            ledDsl: 'DSL',
+            ledInternet: 'NET',
+            ledLos: 'LOS',
+            ledWifi: 'WIFI'
+          },
+          ar: {
+            brandTitle: 'تيلي-مصر ١١١',
+            brandSubtitle: 'مكتب الدعم الفني وخدمة العملاء',
+            langToggle: 'English',
+            shiftTimer: 'الوردية',
+            csatLabel: 'التقييم',
+            scoreLabel: 'النقاط',
+            resolvedLabel: 'تم الحل',
+            droppedLabel: 'قفلوا السكة',
+            pauseBtn: 'إيقاف مؤقت',
+            resumeBtn: 'استكمال',
+            restartShiftBtn: 'إعادة الوردية',
+            historyBtn: 'سجل الشكاوى',
+            muteBtn: 'كتم الصوت',
+            unmuteBtn: 'تشغيل الصوت',
+            startTitle: 'محاكي الدعم الفني — تيلي-مصر ١١١',
+            startSubtitle:
+              'اقعد على مكتب أشهر كول سنتر إنترنت في مصر! اتكلم بالمايك بالعامية المصرية أو الإنجليزي، افحص لمبة الـ LOS الحمراء، اطلب الرقم القومي المكون من ١٤ رقم، واعرف إمتى تقول "معلش يا فندم اطفي الراوتر ١٠ ثواني".',
+            selectShiftMode: 'اختر نظام الوردية',
+            modeQuick: 'وردية سريعة (٩٠ ثانية)',
+            modeStandard: 'وردية كاملة (١٥٠ ثانية)',
+            modeEndless: 'لعب حر (بدون وقت)',
+            startShiftCta: 'ابدأ الوردية',
+            controlsHint: 'اضغط/اثبت على المايك (أو Space) للتحدث · ١-٨ الإجراءات · N التالي · P إيقاف · L اللغة',
+            incomingCallLabel: 'المتصل الحالي',
+            patienceLabel: 'عداد صبر العميل',
+            lineStatusLabel: 'الشكوى المبدئية',
+            routerUnitTitle: 'راوتر العميل (مباشر)',
+            rebootingBanner: 'جاري عمل ريستارت للراوتر لمدة ١٠ ثواني...',
+            checkingLineBanner: 'جاري فحص الخط والبورت من السنترال...',
+            accountSnapshotTitle: 'بيانات الحساب وقراءات الخط',
+            nationalIdLabel: 'الرقم القومي (١٤ رقم)',
+            packageLabel: 'نظام الباقة',
+            billingLabel: 'حالة الفاتورة',
+            quotaLabel: 'الاستهلاك',
+            attenuationLabel: 'تشويش الخط',
+            snrLabel: 'جودة الإشارة SNR',
+            unverifiedText: 'لم يتم طلبه بعد',
+            notScannedText: 'افحص الخط أولاً',
+            transcriptTitle: 'سجل المكالمة المباشر',
+            agentLabel: 'أنت (الدعم الفني)',
+            systemLabel: 'نظام المكتب',
+            actionsTitle: 'إجراءات الدعم الفني',
+            diagnosticsGroup: 'الخطوة ١ · الفحص والتهدئة',
+            resolutionGroup: 'الخطوة ٢ · الحل والإنهاء',
+            nextCallBtn: 'استلام المكالمة التالية (N)',
+            quickNextBtn: 'المكالمة التالية',
+            endShiftNowBtn: 'إنهاء الوردية',
+            callResolvedTag: 'تم حل الشكوى',
+            callDroppedTag: 'العميل قفل السكة',
+            historyDrawerTitle: 'سجل شكاوى الوردية',
+            historyEmpty: 'لم يتم إنهاء أي مكالمة في هذه الوردية بعد.',
+            closeBtn: 'إغلاق',
+            howToTitle: 'دليل النجاة في مكتب ١١١',
+            howToIntro:
+              'كل متصل عنده سبب حقيقي مخفي ورا المشكلة. اتكلم بالمايك أو اكتب بالعربي العامي أو الإنجليزي، واختار الحل الصح!',
+            howToRules: [
+              '١. اضغط Space أو المايك واتكلم بطبيعتك — مثلاً: "معلش يا فندم ممكن ترستر الراوتر وتستنى ١٠ ثواني".',
+              '٢. اطلب الرقم القومي (١٤ رقم) عشان تشوف نوع الباقة، الفواتير المتأخرة، ورصيد الجيجات.',
+              '٣. اعمل فحص للخط والبورت عشان تكشف التشويش، تعليق السنترال، أو لمبة الـ LOS الحمراء.',
+              '٤. هدّي العملاء المتعصبين الأول—عشان يبطلوا زعيق ويدوك الرقم القومي.',
+              '٥. ما تطلبش ريستارت ١٠ ثواني عمّال على بطال! اللي لمبته حمراء أو عمل ريستارت ٥ مرات هيتعصب أكتر.'
+            ],
+            summaryTitle: 'تقرير نهاية الوردية',
+            summaryCalls: 'إجمالي المكالمات',
+            summaryResolved: 'شكاوى محلولة',
+            summaryDropped: 'مكالمات مفقودة',
+            summaryScore: 'مجموع النقاط',
+            summaryBestStreak: 'أطول سلسلة نجاح',
+            summaryReboots: 'مرات طلب الريستارت',
+            summaryIds: 'أرقام قومية تم التحقق منها',
+            summaryPlayAgain: 'العب تاني',
+            summaryBackTitle: 'القائمة الرئيسية',
+            pausedTitle: 'الوردية متوقفة مؤقتاً',
+            pausedDesc: 'خد بُق شاي بالنعناع. مؤقت الوردية وعداد صبر العميل متوقفين حالياً.',
+            audioSetupBtn: 'المايك والصوت',
+            audioModalTitle: 'إعدادات الميكروفون والسماعة',
+            audioModalDesc:
+              'فعّل الميكروفون عشان تتكلم مع العملاء بصوتك بالعامية المصرية أو الإنجليزية، واختبر صوت السماعة لسماع انفعالات العملاء.',
+            speakerSectionTitle: 'سماعة المكالمات وصوت العميل (TTS)',
+            speakerSupported: 'النطق الصوتي جاهز للعمل',
+            speakerUnsupported: 'المتصفح لا يدعم النطق الصوتي — السجل النصي يعمل بالكامل',
+            testSpeakerBtn: 'اختبار صوت العميل',
+            testSpeakerPhrase: 'ألو! أهلاً بك في مكتب دعم تيلي مصر ١١١. الصوت شغال بوضوح!',
+            micSectionTitle: 'مايك الموظف (تحويل الصوت لنص)',
+            micGranted: 'تم السماح باستخدام الميكروفون',
+            micPending: 'لم يتم طلب إذن المايك بعد',
+            micDenied: 'الميكروفون مرفوض — يمكنك الكتابة أو استخدام الأزرار',
+            micUnsupported: 'المتصفح لا يدعم التعرف على الصوت — استخدم الكتابة أو الأزرار',
+            enableMicBtn: 'تفعيل الميكروفون',
+            continueWithAudioBtn: 'ابدأ الوردية بالهيدست',
+            continueTextOnlyBtn: 'الاستمرار بالكتابة والأزرار فقط',
+            callerSpeakingLabel: 'العميل يتحدث الآن...',
+            speakerReadyLabel: 'السماعة جاهزة',
+            voiceMutedLabel: 'صوت العميل مكتوم',
+            repeatLineBtn: 'إعادة آخر جملة',
+            voiceToggleLabel: 'الصوت',
+            micHoldLabel: 'اضغط أو اثبت على المايك (أو Space)',
+            micListeningLabel: 'جاري الاستماع...',
+            micToggleListenBtn: 'استماع مستمر',
+            micStopListenBtn: 'إيقاف المايك',
+            liveTranscriptLabel: 'تحويل الصوت لنص وفهم النية',
+            liveTranscriptPlaceholder: 'اضغط على المايك أو Space واتكلم بالمصري أو الإنجليزي...',
+            recognizedIntentLabel: 'الإجراء المفهوم',
+            noIntentDetected: 'لم يتم تحديد إجراء واضح — جرب قول "رستر الراوتر"، "الرقم القومي"، "فحص الخط"، "الفاتورة"، أو "معلش".',
+            textFallbackPlaceholder: 'اكتب ردك بالمصري أو الإنجليزي (مثلاً: معلش يا فندم رستر الراوتر ١٠ ثواني)...',
+            sendBtn: 'إرسال',
+            micErrorNotAllowed: 'تم حظر إذن المايك (تأكد من السماح للمايك في إعدادات المتصفح). يمكنك الكتابة أو استخدام الأزرار.',
+            micErrorUnsupported: 'التعرف على الصوت غير مدعوم في هذا المتصفح. اكتب بالأسفل أو اضغط الأزرار.',
+            micErrorGeneric: 'تعذر التقاط الصوت حالياً. يمكنك الكتابة في الخانة بالأسفل أو استخدام الأزرار.',
+            patienceWarn: 'تحذير: صبر العميل على وشك الانتهاء! هدّيه أو حل المشكلة بسرعة.',
+            ledPower: 'باور',
+            ledDsl: 'DSL',
+            ledInternet: 'إنترنت',
+            ledLos: 'LOS',
+            ledWifi: 'واي فاي'
+          }
+        };
+
+        var MOODS = {
+          calm: { en: 'Calm', ar: 'هادي' },
+          confused: { en: 'Confused', ar: 'تايه / محتار' },
+          impatient: { en: 'Impatient', ar: 'مستعجل' },
+          furious: { en: 'Furious', ar: 'متعصب جداً' },
+          sarcastic: { en: 'Sarcastic', ar: 'ساخر' }
+        };
+
+        var LINE_LABELS = {
+          pppoe_frozen: { en: 'PPPoE Session Hung', ar: 'جلسة الراوتر معلّقة' },
+          red_los: { en: 'Red LOS Blinking', ar: 'لمبة LOS حمراء بتنور وتطفي' },
+          quota_exhausted: { en: '100% Quota Throttled', ar: 'الباقة خلصانة (سرعة مخفضة)' },
+          port_stuck: { en: 'DSLAM Port Stuck', ar: 'البورت معلّق في السنترال' },
+          billing_hold: { en: 'Billing Sync Hold', ar: 'تعليق فاتورة / تجديد' },
+          high_attenuation: { en: 'High Attenuation / Noise', ar: 'تشويش عالي على الخط' },
+          power_unplugged: { en: 'Router Offline / Unplugged', ar: 'الراوتر فاصل باور' },
+          line_healthy: { en: 'Line Healthy (Local Issue)', ar: 'الخط سليم ١٠٠٪' }
+        };
+
+        var ACTIONS = [
+          {
+            id: 'ask_id', shortcut: '1', group: 'diagnostic', icon: '🪪',
+            label: { en: 'Ask for National ID', ar: 'طلب الرقم القومي (١٤ رقم)' },
+            sub: { en: 'Verify account & billing', ar: 'تأكيد الباقة والفاتورة' },
+            line: { en: 'May I have your 14-digit National ID to pull up your account details?', ar: 'ممكن يا فندم الرقم القومي المكون من ١٤ رقم عشان أراجع بيانات الحساب؟' }
+          },
+          {
+            id: 'restart_router', shortcut: '2', group: 'diagnostic', icon: '🔄',
+            label: { en: 'Restart Router (10s)', ar: 'اطفي الراوتر ١٠ ثواني' },
+            sub: { en: 'Power-cycle & resync', ar: 'إعادة تشغيل وتحديث الجلسة' },
+            line: { en: 'Could you please unplug the router, wait 10 seconds, and plug it back in?', ar: 'معلش يا فندم اطفي الراوتر من الكهرباء، واستنى ١٠ ثواني، وشغله تاني.' }
+          },
+          {
+            id: 'check_line', shortcut: '3', group: 'diagnostic', icon: '📡',
+            label: { en: 'Check Line & Port', ar: 'فحص الخط والبورت' },
+            sub: { en: 'Scan SNR, LOS & DSLAM', ar: 'قياس التشويش وحالة السنترال' },
+            line: { en: 'One moment please while I run a full line & port diagnostic from our central office.', ar: 'لحظة واحدة يا فندم هعمل فحص شامل للخط والبورت من السنترال.' }
+          },
+          {
+            id: 'deescalate', shortcut: '4', group: 'diagnostic', icon: '🤝',
+            label: { en: 'Calm & Empathize', ar: 'تهدئة العميل باحتراف' },
+            sub: { en: 'Restore caller patience', ar: 'امتصاص الغضب ورفع الصبر' },
+            line: { en: 'I completely understand your frustration, and I’m staying right on the line with you until we solve this.', ar: 'أنا مقدّر جداً انزعاجك يا فندم وحقك عليا، وأنا معاك على الخط خطوة بخطوة لحد ما المشكلة تتحل.' }
+          },
+          {
+            id: 'reset_port', shortcut: '5', group: 'resolution', icon: '🛠️',
+            label: { en: 'Reset Central Port', ar: 'تنشيط البورت من السنترال' },
+            sub: { en: 'Clear stuck DSLAM profile', ar: 'تحديث البروفايل وحل البينج' },
+            line: { en: 'I’m sending a live Port Reset signal to your DSLAM line right now.', ar: 'أنا ببعت إشارة تنشيط وإعادة بناء للبورت من السنترال حالاً يا فندم.' }
+          },
+          {
+            id: 'explain_billing', shortcut: '6', group: 'resolution', icon: '💳',
+            label: { en: 'Explain Quota / Billing', ar: 'توضيح الباقة / الفاتورة' },
+            sub: { en: 'Resolve renewal or 2 Mbps cap', ar: 'مراجعة الاستهلاك أو السداد' },
+            line: { en: 'Let me walk you through your exact quota usage and billing status on the account.', ar: 'خليني أوضح لحضرتك تفاصيل استهلاك الباقة وحالة السداد على الحساب.' }
+          },
+          {
+            id: 'dispatch_tech', shortcut: '7', group: 'resolution', icon: '🚐',
+            label: { en: 'Dispatch Technician', ar: 'تحويل لفني صيانة ميداني' },
+            sub: { en: 'For Red LOS or outdoor faults', ar: 'لحالات قطع الفايبر والتشويش' },
+            line: { en: 'This requires an outdoor physical check. I’m escalating a priority field technician ticket for you.', ar: 'المشكلة في السلك الخارجي وبتحتاج فحص ميداني. هفتح لحضرتك تيكت عاجل لزيارة الفني.' }
+          },
+          {
+            id: 'polite_close', shortcut: '8', group: 'resolution', icon: '✅',
+            label: { en: 'Polite Wrap-Up', ar: 'إنهاء المكالمة بأدب' },
+            sub: { en: 'Close verified healthy call', ar: 'إغلاق المكالمة بعد التأكد' },
+            line: { en: 'Everything is verified and running smoothly. Thank you for calling Tele-Masr 111!', ar: 'كده كل حاجة تمام والخدمة شغالة بأفضل شكل. شكراً لاتصالك بتيلي-مصر ١١١!' }
+          }
+        ];
+
+        // ---------- 2. SCENARIOS (11 EGYPTIAN ISP PERSONAS) ----------
+        var SCENARIOS = [
+          {
+            id: 'medhat', name: { en: 'Captain Medhat', ar: 'كابتن مدحت' }, role: { en: 'Die-hard Football Fan', ar: 'مشجع كورة متعصب' },
+            avatar: 'football', color: '#16A34A', mood: 'impatient', patience: 82, decay: 1.5,
+            lineStatus: 'pppoe_frozen', trueCause: 'restart_router', also: [], alreadyRestarted: false,
+            nid: '28604150103419', pkg: { en: 'Super 30 Mbps · 140 GB', ar: 'سوبر ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '68% Remaining', ar: 'متبقي ٦٨٪' },
+            att: '18.4 dB', snr: '19.2 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'red', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'Ya basha! The Champions League match starts in 3 minutes and the stream froze! Do something fast!', ar: 'يا باشا ماتش دوري الأبطال هيبدأ بعد ٣ دقايق والشاشة وقفت! الحقني بسرعة الله يخليك!' },
+            idRes: { en: 'Here, 28604150103419! Write it down quick, the referee already has the whistle!', ar: 'اتفضل ٢٨٦٠٤١٥٠١٠٣٤١٩! اكتب بسرعة الحكم حاطط الصفارة في بوقه!' },
+            lineCheck: { en: 'Signal is clean (18.4 dB), but the router PPPoE session is frozen on an old IP.', ar: 'الإشارة ممتازة (١٨.٤ dB)، بس جلسة الـ PPPoE معلّقة على IP قديم ومحتاجة ريستارت.' },
+            rebootOk: { en: 'WOOHOO! The green light is back and the stream loaded right before kickoff! You are a hero, ya handasa!', ar: 'الله أكبر! اللمبة بقت خضرا والماتش اشتغل قبل الضربة الأولى! إنت برنس يا هندسة!' },
+            rebootFail: { en: 'Restarting...', ar: 'بنجرب...' },
+            calm: { en: 'Okay, okay, I am breathing... just don’t make me miss the first goal!', ar: 'طيب حاضر هادي أهو... بس أبوس إيدك ما يروحش عليا الجول الأول!' },
+            portRes: { en: 'DSL flickered, internet is still red on my box though! Maybe power-cycle the router?', ar: 'لمبة الـ DSL رَعشت، بس لمبة النت لسه حمرا! يمكن الراوتر نفسه محتاج يتطفي ويشتغل؟' },
+            billRes: { en: 'My bill is paid, bro! Why are we talking about invoices during stoppage time?!', ar: 'فاتورة إيه يا عم أنا دافع من أول الشهر! إنت بتكلمني في فواتير والماتش شغال؟!' },
+            techRes: { en: 'Wait 48 hours for a technician?! The final will be over by Tuesday!!', ar: 'فني بعد ٤٨ ساعة إيه يا فندم؟! البطولة هتخلص يوم التلات!!' },
+            closeOk: { en: 'Enjoy the match, Captain Medhat!', ar: 'مشاهدة ممتعة يا كابتن مدحت!' },
+            closeBad: { en: 'Don’t hang up on me! My screen is still spinning!!', ar: 'تقفل إيه يا عم؟! الشاشة لسه بتلف!!' },
+            hangup: { en: 'GOAL MISSED! I’m switching to the neighbor’s Wi-Fi! *CLICK*', ar: 'الجول ضاع بسبَبك! أنا هفتح نت الجيران! *قفل السكة*' },
+            winLog: { en: 'Saved Champions League kickoff with a clutch 10s router reboot.', ar: 'إنقاذ ماتش دوري الأبطال بريستارت ١٠ ثواني في الوقت بدل الضائع.' }
+          },
+          {
+            id: 'samira', name: { en: 'Hajja Samira', ar: 'الحاجة سميرة' }, role: { en: 'Worried Grandmother', ar: 'ست بيت طيبة' },
+            avatar: 'hajja', color: '#D97706', mood: 'confused', patience: 90, decay: 1.1,
+            lineStatus: 'red_los', trueCause: 'dispatch_tech', also: [], alreadyRestarted: false,
+            nid: '25409020101182', pkg: { en: 'Fiber Home 70 Mbps', ar: 'فايبر هوم ٧٠ ميجا' },
+            bill: { en: 'Paid · Auto-Renew', ar: 'مدفوعة · تجديد تلقائي' }, quota: { en: '82% Remaining', ar: 'متبقي ٨٢٪' },
+            att: 'NO SIGNAL', snr: '0.0 dB',
+            lights: { power: 'green', dsl: 'off', internet: 'off', los: 'red_blink', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'off', internet: 'off', los: 'red_blink', wifi: 'green' },
+            open: { en: 'My son, the little white box has a scary red light blinking like an ambulance! My grandson says the internet ran away!', ar: 'يا ابني الصندوق الأبيض بينوّر لمبة حمرا بتغمز زي عربية الإسعاف! حفيدي بيقولي النت هرب!' },
+            idRes: { en: 'Bless you dear, let me get my glasses... 25409020101182.', ar: 'ربنا يباركلك يا ابني ثواني أجيب النضارة... ٢٥٤٠٩٠٢٠١٠١١٨٢.' },
+            lineCheck: { en: 'Optical Loss (LOS) alarm detected! Outdoor fiber cable is cut or bent. Needs field technician.', ar: 'تحذير قطع إشارة ضوئية (Red LOS)! سلك الفايبر الخارجي مقطوع ومحتاج فني صيانة.' },
+            rebootFail: { en: 'I unplugged it for 10 seconds like you said, dear... still blinking red like a traffic light!', ar: 'طفيته ١٠ ثواني زي ما قلتلي يا ابني... ولسه بينوّر أحمر زي إشارة المرور!' },
+            calm: { en: 'You are so polite, may God bless your mother. Tell me what to do, my son.', ar: 'كلك ذوق يا ابني ربنا يبارك لوالدتك. قولي أعمل إيه وأنا معاك.' },
+            portRes: { en: 'It didn’t change anything, dear. That red light is stubborn!', ar: 'ما حصلش حاجة يا ابني. اللمبة الحمرا دي عنيدة خالص!' },
+            billRes: { en: 'My son pays the bill every month! Look at the red light, not the bill!', ar: 'ابني دافع الفاتورة والله يا بني! شوفلي اللمبة الحمرا دي إيه!' },
+            techRes: { en: 'Oh wonderful! So a nice technician will come check the cable outside? Thank you so much, my son!', ar: 'يا سلام! يعني المهندس هييجي يبص على السلك من بره؟ كتر ألف خيرك يا ابني ربنا يسعدك!' },
+            closeOk: { en: 'Ticket logged for field visit. Take care, Hajja Samira!', ar: 'تم تسجيل زيارة الفني بنجاح. في رعاية الله يا حاجة سميرة!' },
+            closeBad: { en: 'Wait, my grandson is still crying for his cartoons! Aren’t you sending someone?', ar: 'استنى يا ابني الواد لسه بيعيط عشان الكرتون! مش هتبعت حد؟' },
+            hangup: { en: 'Never mind, I’ll call my neighbor’s boy to look at the wire... *CLICK*', ar: 'خلاص يا ابني هخلي ابن الجيران يطلع يبص على السلك... *قفل السكة*' },
+            winLog: { en: 'Diagnosed Red LOS fiber cut and dispatched a field technician.', ar: 'تشخيص قطع الفايبر (Red LOS) وإرسال فني صيانة بأدب.' }
+          },
+          {
+            id: 'kareem', name: { en: 'Eng. Kareem', ar: 'م. كريم' }, role: { en: 'Speed-Obsessed Analyst', ar: 'مهندس بيقيس السرعة كل ساعة' },
+            avatar: 'engineer', color: '#2563EB', mood: 'sarcastic', patience: 76, decay: 1.5,
+            lineStatus: 'quota_exhausted', trueCause: 'explain_billing', also: [], alreadyRestarted: true,
+            nid: '29111200105521', pkg: { en: 'Super 30 Mbps · 140 GB', ar: 'سوبر ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '0 GB Left (Throttled 2 Mbps)', ar: '٠ جيجا متبقية (سرعة مخفضة ٢ ميجا)' },
+            att: '14.1 dB', snr: '24.8 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'Listen, I pay for 30 Mbps and Speedtest just gave me 1.9 Mbps! Are you throttling me on purpose?!', ar: 'اسمعني بقى، أنا بدفع باقة ٣٠ ميجا وسبيد تست طالعلي ١.٩ ميجا! إنتو بتسرقوا السرعة ولا إيه؟!' },
+            idRes: { en: '29111200105521. Check the system, my line should be 30 mega sharp!', ar: '٢٩١١١٢٠٠١٠٥٥٢١. بص في السيستم كده، خطي المفروض ٣٠ ميجا بالمسطرة!' },
+            lineCheck: { en: 'Physical VDSL sync is a crisp 32 Mbps. Speed cap is coming from exhausted account quota.', ar: 'الخط واصل ٣٢ ميجا فعلياً وزي الفل. التبطيء جاي من انتهاء الباقة على السيستم.' },
+            rebootFail: { en: 'Seriously?! I’m an engineer, I restarted twice before calling! The speed is STILL 2 Mbps!', ar: 'بجد؟! أنا مهندس وعملت ريستارت مرتين قبل ما أتصل! السرعة لسه ٢ ميجا برضه!' },
+            calm: { en: 'Alright, I appreciate you not reading from a script. What’s slowing it down?', ar: 'ماشي، مقدّر إنك مش بتقرأ من اسكريبت. قولي بقى إيه السبب الحقيقي؟' },
+            portRes: { en: 'Line synced back at the exact same 2 Mbps! Check my account!', ar: 'الخط رجع على نفس الـ ٢ ميجا داونلود! شوف حسابي الله يكرمك!' },
+            billRes: { en: 'Wait... 140 GB finished in 11 days?! Oh... my brother downloaded 3 PlayStation games in 4K. Adding extra quota now!', ar: 'إيه ده... الـ ١٤٠ جيجا خلصوا في ١١ يوم؟! آه... أخويا نزل ٣ ألعاب بلايستيشن. خلاص هشحن باقة إضافية، شكراً للتوضيح!' },
+            techRes: { en: 'A technician for a 24 dB SNR line?! That makes zero engineering sense!', ar: 'فني إيه والـ SNR عندي ٢٤؟! ده كلام مش منطقي هندسياً خالص!' },
+            closeOk: { en: 'Extra quota explained clearly. Have a great day!', ar: 'تم توضيح استهلاك الباقة. يومك سعيد يا بشمهندس كريم!' },
+            closeBad: { en: 'Excuse me? You didn’t even tell me why my speed is 2 Mbps!', ar: 'نعم؟ إنت لسه ما قلتليش السرعة ٢ ميجا ليه أصلاً!' },
+            hangup: { en: 'Unbelievable! I’m posting this Speedtest screenshot on Facebook! *CLICK*', ar: 'مش معقول! أنا هنزل اسكرين شوت السرعة على الفيس بوك! *قفل السكة*' },
+            winLog: { en: 'Verified 100% quota usage via National ID.', ar: 'إثبات انتهاء الباقة بالرقم القومي واكتشاف تحميلات البلايستيشن.' }
+          },
+          {
+            id: 'tarek', name: { en: 'Tarek "Clutch"', ar: 'طارق الجيمر' }, role: { en: 'Ranked FPS Player', ar: 'لاعب أونلاين متوتر' },
+            avatar: 'gamer', color: '#DC2626', mood: 'furious', patience: 72, decay: 1.8,
+            lineStatus: 'port_stuck', trueCause: 'reset_port', also: [], alreadyRestarted: true,
+            nid: '30205190108843', pkg: { en: 'Gaming VDSL 100 Mbps', ar: 'جيمينج ١٠٠ ميجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '45% Remaining', ar: 'متبقي ٤٥٪' },
+            att: '21.0 dB', snr: '16.5 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'blink_green', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'BRO MY PING IS 999ms IN RANKED! My teammates are screaming! Fix my routing right now!!', ar: 'يا اسطى البينج ٩٩٩ في الرانكد! التيم بتاعي بيشتمني! ظبطلي البورت حالاً!!' },
+            idRes: { en: '30205190108843! Hurry up I’m AFK in spawn!', ar: '٣٠٢٠٥١٩٠١٠٨٨٤٣! بسرعة والنبي أنا واقف AFK في السباون!' },
+            lineCheck: { en: 'DSLAM port is stuck in high-interleaving mode causing 400ms+ jitter. Port Reset clears it.', ar: 'البورت في السنترال معلّق على بروفايل فيه تأخير عالي. تنشيط البورت هيظبط البينج فوراً.' },
+            rebootFail: { en: 'I ALREADY REBOOTED! Now I got a 10-minute ban too! Check the actual port!!', ar: 'ما أنا عملت ريستارت يا عم! ولبست بان ١٠ دقايق كمان! افحص البورت من عندك!!' },
+            calm: { en: 'Okay sorry for yelling, bro... just save my rank please.', ar: 'آسف إني اتعصبت يا اسطى... بس الحقلي الرانك أبوس إيدك.' },
+            portRes: { en: 'WAIT—PING JUST DROPPED FROM 999ms TO 38ms!! LET’S GOOO! GG EZ!', ar: 'استنى—البينج نزل من ٩٩٩ لـ ٣٨ مللي ثانية!! عاش يا وحش والله! GG!' },
+            billRes: { en: 'Quota?! I have 200 gigs left! It’s the ping, not the quota!', ar: 'باقة إيه يا عم أنا لسه شاحن! المشكلة في البينج مش الباقة!' },
+            techRes: { en: 'A field tech next week?! My season ends tonight!!', ar: 'فني الأسبوع الجاي إيه؟! السيزون بيخلص النهارده!!' },
+            closeOk: { en: 'Ping stabilized at 38ms. Go carry your team, Tarek!', ar: 'البينج استقر على ٣٨. روح شيل التيم بقى يا طارق!' },
+            closeBad: { en: 'Bro I’m still lagging across the map! Don’t close the ticket!', ar: 'يا اسطى لسه بنط من مكان لمكان من اللاج! ما تقفلش!' },
+            hangup: { en: 'I just deranked to Bronze! I’m uninstalling! *CLICK*', ar: 'أنا نزلت برونز! همسح اللعبة والنت! *قفل السكة*' },
+            winLog: { en: 'Reset DSLAM port and dropped ranked ping from 999ms to 38ms.', ar: 'تنشيط بورت السنترال وتنزيل البينج من ٩٩٩ لـ ٣٨.' }
+          },
+          {
+            id: 'nadia', name: { en: 'Mrs. Nadia', ar: 'مدام نادية' }, role: { en: 'Fawry Payment Shopper', ar: 'دفعت الفاتورة من دقيقتين' },
+            avatar: 'auntie', color: '#0284C7', mood: 'impatient', patience: 84, decay: 1.3,
+            lineStatus: 'billing_hold', trueCause: 'explain_billing', also: ['reset_port'], alreadyRestarted: false,
+            nid: '27503120102246', pkg: { en: 'Home 30 Mbps · 140 GB', ar: 'هوم ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'Paid 2m ago · Sync Pending', ar: 'تم الدفع من دقيقتين · جاري التفعيل' }, quota: { en: '100% Renewed', ar: '١٠٠٪ متجددة' },
+            att: '16.5 dB', snr: '21.0 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'red', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'Excuse me! I literally paid the bill at Fawry 2 minutes ago! Why is the internet still dead?!', ar: 'لو سمحت يا أستاذ! أنا لسه دافعة الفاتورة من فوري من دقيقتين والوصل في إيدي! النت لسه فاصل ليه بقى؟!' },
+            idRes: { en: '27503120102246. Look, 260 pounds paid exact!', ar: '٢٧٥٠٣١٢٠١٠٢٢٤٦. بص عندك هتلاقي ٢٦٠ جنيه اتسحبوا بالتمام!' },
+            lineCheck: { en: 'Line is clean, account shows Fawry payment 2m ago waiting on sync (explain or refresh port).', ar: 'الخط سليم، والدفع مسمّع من دقيقتين ومحتاج تنشيط أو توضيح إن اللمبة هتقلب خضرا خلال ثواني.' },
+            rebootFail: { en: 'I restarted and waited 10 seconds... still red! Maybe payment hasn’t synced?', ar: 'طفيته واستنيت ١٠ ثواني... ولسه أحمر! يمكن السيستم لسه ما سمّعش الدفع؟' },
+            calm: { en: 'Okay dear, thank you for checking the receipt for me.', ar: 'ماشي يا ابني كتر خيرك إنك بتتأكدلي من الوصل.' },
+            portRes: { en: 'Oh! Refreshing the port forced the paid session to activate! Green light is on!', ar: 'الله! لما نشّطت الخط الدفع سمّع واللمبة قلبت خضرا أهي!' },
+            billRes: { en: 'Aha! Payment takes 3 minutes to sync and now it activated! I thought the kiosk ate my money!', ar: 'أيوة! الدفع بياخد ٣ دقايق يسمّع... أهو اللمبة قلبت خضرا دلوقتي! الحمد لله افتكرت الكشك بلع الفلوس!' },
+            techRes: { en: 'Why send a technician?! I just paid the bill!', ar: 'تبعتلي فني ليه يا ابني؟! أنا دافعة الفاتورة بس!' },
+            closeOk: { en: 'Payment synced and active. Thank you, Mrs. Nadia!', ar: 'تم تفعيل الباقة والإنترنت يعمل بنجاح. شكراً يا مدام نادية!' },
+            closeBad: { en: 'Wait! Did my 260 pounds show up or not?!', ar: 'استنى يا ابني! الـ ٢٦٠ جنيه وصلوا ولا لأ؟!' },
+            hangup: { en: 'I’m going back to the kiosk to get my money back! *CLICK*', ar: 'أنا راجعة للكشك أسترد فلوسي! *قفل السكة*' },
+            winLog: { en: 'Confirmed Fawry payment sync and restored Mrs. Nadia’s connection.', ar: 'تأكيد تسميع دفع فوري وتفعيل باقة مدام نادية.' }
+          },
+          {
+            id: 'amr', name: { en: 'Amr "The Expert"', ar: 'عمرو الخبير' }, role: { en: 'Blames Remote Sabotage', ar: 'مقتنع إننا فصلنا له النت' },
+            avatar: 'skeptic', color: '#7C3AED', mood: 'furious', patience: 68, decay: 1.6,
+            lineStatus: 'port_stuck', trueCause: 'reset_port', also: [], alreadyRestarted: true, refusesIdInitially: true,
+            nid: '28908140107731', pkg: { en: 'Mega 70 Mbps · 250 GB', ar: 'ميجا ٧٠ ميجا · ٢٥٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '52% Remaining', ar: 'متبقي ٥٢٪' },
+            att: '24.3 dB', snr: '11.2 dB',
+            lights: { power: 'green', dsl: 'blink_amber', internet: 'off', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'DON’T YOU DARE tell me to restart! I restarted 5 times! YOU broke my line remotely!', ar: 'إياك تقولي اطفي الراوتر وشغله! أنا عملت ريستارت ٥ مرات! إنتو اللي بوظتوا خطي ريموتلي!' },
+            idRefusal: { en: 'Why do you need my National ID?! Calm down with me first!', ar: 'عايز الرقم القومي ليه؟! هدّيني الأول واعرف مشكلتي!' },
+            idRes: { en: 'Fine, since you asked nicely: 28908140107731. Now fix your central server!', ar: 'ماشي عشان إنت محترم بس: ٢٨٩٠٨١٤٠١٠٧٧٣١. ظبطلي البورت بتاعكم بقى!' },
+            lineCheck: { en: 'DSL blinking because central office port profile crashed. A Port Reset will lock sync.', ar: 'لمبة الـ DSL بترعش لأن بروفايل البورت في السنترال واقع. تنشيط البورت هيستعيد الربط فوراً.' },
+            rebootFail: { en: 'WHAT DID I SAY?! Restarting did NOTHING! Stop reading the script!!', ar: 'أنا مش قلتلك؟! الريستارت ما عملش حاجة! بطّل تقرأ من الورقة!!' },
+            calm: { en: 'Alright... you actually listened instead of arguing. Respect. Now check my port.', ar: 'طيب... إنت سمعتني بجد وما عاندتش معايا. احترامي ليك. افحصلي بقى الخط.' },
+            portRes: { en: 'Whoa! DSL went solid green AND internet is back! So it WAS the port! Good job!', ar: 'إيه ده! لمبة الـ DSL ثبتت والنت رجع! يعني كان البورت فعلاً! شاطر يا هندسة والله.' },
+            billRes: { en: 'I don’t owe you a single piaster! Check the technical port!', ar: 'أنا مش عليا مليم! بص في المشكلة الفنية يا عم!' },
+            techRes: { en: 'I don’t want someone in 3 days! Fix it from your desk!', ar: 'مش عايز حد يجيلي بعد ٣ أيام! حلّها من عندك!' },
+            closeOk: { en: 'Port rebuilt and connection stable. Pleasure helping you, Amr!', ar: 'تم إعادة بناء البورت واستقرار الخط. تشرفنا بخدمتك يا أستاذ عمرو!' },
+            closeBad: { en: 'Hang up?! You didn’t fix anything yet!', ar: 'تقفل إيه؟! إنت لسه ما عملتش حاجة!' },
+            hangup: { en: 'I knew it! Nobody knows anything there! *CLICK*', ar: 'أنا كنت متأكد! ما فيش فايدة فيكم! *قفل السكة*' },
+            winLog: { en: 'De-escalated Amr and fixed his crashed central port.', ar: 'احتواء غضب عمرو بدون سيرة الريستارت وإصلاح بورت السنترال.' }
+          },
+          {
+            id: 'salma', name: { en: 'Salma Hany', ar: 'سلمى هاني' }, role: { en: 'Remote Job Candidate', ar: 'عندها انترفيو أونلاين' },
+            avatar: 'applicant', color: '#0D9488', mood: 'impatient', patience: 80, decay: 1.4,
+            lineStatus: 'pppoe_frozen', trueCause: 'restart_router', also: [], alreadyRestarted: false,
+            nid: '29807110104412', pkg: { en: 'Super 30 Mbps · 140 GB', ar: 'سوبر ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '71% Remaining', ar: 'متبقي ٧١٪' },
+            att: '15.2 dB', snr: '22.4 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'red', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'Please help! I have a Zoom interview in 4 minutes and my laptop says "No Internet"!', ar: 'أرجوك الحقني! عندي انترفيو على زوم بعد ٤ دقايق واللاب كاتب متصل بدون إنترنت!' },
+            idRes: { en: 'Yes! 29807110104412. Can we fix it before HR joins?', ar: 'أيوة! ٢٩٨٠٧١١٠١٠٤٤١٢. هنلحق قبل ما الـ HR تدخل؟' },
+            lineCheck: { en: 'Attenuation great (15.2 dB), router DNS session froze. A 10s power cycle clears it.', ar: 'الخط ممتاز (١٥.٢ dB)، بس الراوتر مهنّج على الـ DNS. ريستارت ١٠ ثواني هيشغّله فوراً.' },
+            rebootOk: { en: 'YES! Zoom connected and my camera is live! Wish me luck!!', ar: 'أيوه! زوم فتح والكاميرا اشتغلت! ادعيلي أتقبل!!' },
+            rebootFail: { en: 'Rebooting...', ar: 'جاري إعادة التشغيل...' },
+            calm: { en: 'Thank you for reassuring me... okay I’m ready, what’s step one?', ar: 'شكراً إنك طمنتني... تمام أنا جاهزة، أعمل إيه؟' },
+            portRes: { en: 'Line flickered, internet light still red. Should I power cycle the router here?', ar: 'الخط رَعش، بس لمبة النت لسه حمرا. أطفي الراوتر وأشغله؟' },
+            billRes: { en: 'My dad paid yesterday! Why is my laptop saying No Internet?', ar: 'بابا دافع امبارح! اللاب توب فاصل ليه؟' },
+            techRes: { en: 'A technician tomorrow?! My interview is in 3 minutes!!', ar: 'فني بكرة إيه؟! الانترفيو بعد ٣ دقايق!!' },
+            closeOk: { en: 'Best of luck in your interview, Salma!', ar: 'بالتوفيق في الانترفيو يا سلمى!' },
+            closeBad: { en: 'Wait please, Zoom is still showing "Reconnecting..."!', ar: 'استنى من فضلك، زوم لسه كاتب جاري إعادة الاتصال!' },
+            hangup: { en: 'I’m tethering from my 4G phone! *CLICK*', ar: 'هفتح باقة الموبايل، ما فيش وقت! *قفل السكة*' },
+            winLog: { en: 'Cleared frozen DNS with a 10s reboot before Salma’s interview.', ar: 'حل تعليق الراوتر بريستارت ١٠ ثواني قبل انترفيو سلمى.' }
+          },
+          {
+            id: 'shawky', name: { en: 'Uncle Shawky', ar: 'عم شوقي' }, role: { en: 'Retired Accountant', ar: 'محاسب على المعاش' },
+            avatar: 'grandpa', color: '#EA580C', mood: 'confused', patience: 88, decay: 1.0,
+            lineStatus: 'power_unplugged', trueCause: 'restart_router', also: [], alreadyRestarted: false,
+            nid: '25812050100934', pkg: { en: 'Home 30 Mbps · 140 GB', ar: 'هوم ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '91% Remaining', ar: 'متبقي ٩١٪' },
+            att: 'OFFLINE', snr: 'OFFLINE',
+            lights: { power: 'off', dsl: 'off', internet: 'off', los: 'off', wifi: 'off' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'Hello son? All the lights on my router went completely dark! Is the whole neighborhood down?', ar: 'ألو يا ابني؟ كل لمبات الراوتر مطفية خالص! هو انتو فصلتوا النت عن المنطقة كلها؟' },
+            idRes: { en: 'Hold on... 25812050100934. Not even the power light is on!', ar: 'ثواني يا ابني... ٢٥٨١٢٠٥٠١٠٠٩٣٤. ده حتى لمبة الباور مش منوّرة!' },
+            lineCheck: { en: 'No CPE detected—router has zero power! Ask him to unplug & plug power adapter.', ar: 'الراوتر فاصل كهرباء تماماً! خليه يشيك على الفيشة أو يعمل إعادة تشغيل.' },
+            rebootOk: { en: 'OH! Haha! The power strip switch was bumped OFF! All lights are green now!', ar: 'أوووه! هههه! لقيت المشترك كان مقفول بالرجل! كل اللمبات نوّرت أخضر أهي!' },
+            rebootFail: { en: 'Checking plug...', ar: 'بشوف الفيشة...' },
+            calm: { en: 'No rush at all, son. My tea is hot and I’m listening.', ar: 'ولا يهمك يا ابني على مهلك. كوباية الشاي سخنة وأنا سامعك.' },
+            portRes: { en: 'Still completely dark over here! The box has zero lights!', ar: 'الجهاز لسه مطفي ضلمة خالص عندي!' },
+            billRes: { en: 'I paid 3 months in advance! Still no electricity in the box.', ar: 'أنا دافع ٣ شهور مقدم! بس العلبة لسه ما فيهاش كهرباء.' },
+            techRes: { en: 'Wait, sending an engineer just to look at my wall plug?!', ar: 'هتبعت مهندس عشان يبص على فيشة الحيطة؟!' },
+            closeOk: { en: 'Glad it was just the power strip, Uncle Shawky!', ar: 'الحمد لله إنها طلعت المشترك يا عم شوقي!' },
+            closeBad: { en: 'Wait son, the router is still pitch black!', ar: 'استنى يا ابني الراوتر لسه مطفي خالص!' },
+            hangup: { en: 'My wife says the vacuum unplugged it... never mind! *CLICK*', ar: 'المدام بتقولي المكنسة شدّت الفيشة... خلاص لقيناها! *قفل السكة*' },
+            winLog: { en: 'Helped Uncle Shawky discover his bumped power strip switch.', ar: 'اكتشاف إن مشترك الكهرباء كان مفصول عند عم شوقي.' }
+          },
+          {
+            id: 'hossam', name: { en: 'Hossam Adel', ar: 'حسام عادل' }, role: { en: 'Forgetful Freelancer', ar: 'فريلانسر نساي' },
+            avatar: 'student', color: '#E11D48', mood: 'impatient', patience: 78, decay: 1.4,
+            lineStatus: 'billing_hold', trueCause: 'explain_billing', also: [], alreadyRestarted: true,
+            nid: '29502280106125', pkg: { en: 'Super 30 Mbps · 140 GB', ar: 'سوبر ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'OVERDUE: 310 EGP (Suspended)', ar: 'فاتورة غير مدفوعة: ٣١٠ ج.م (موقوف)' }, quota: { en: 'Suspended Pending Payment', ar: 'موقوف لحين السداد' },
+            att: '17.0 dB', snr: '20.5 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'red', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'green', internet: 'red', los: 'off', wifi: 'green' },
+            open: { en: 'Hey! Everything worked last night and this morning the internet light turned red! What happened?!', ar: 'يا فندم! النت كان شغال امبارح والنهارده الصبح اللمبة بقت حمرا! إيه اللي حصل؟!' },
+            idRes: { en: '29502280106125. Did my neighbor steal my port again?', ar: '٢٩٥٠٢٢٨٠١٠٦١٢٥. هو جاري سرق البورت بتاعي تاني؟' },
+            lineCheck: { en: 'Line sync clean, auth blocked by unpaid 310 EGP monthly invoice.', ar: 'الخط واصل تمام، بس الخدمة متوقفة إدارياً بسبب فاتورة غير مدفوعة (٣١٠ جنيه).' },
+            rebootFail: { en: 'I restarted twice already and it’s still red! Check my account!', ar: 'عملت ريستارت مرتين ولسه حمرا! راجع حالة حسابي طيب!' },
+            calm: { en: 'Fair enough, thanks for checking carefully.', ar: 'ماشي تمام، شكراً إنك بتراجع الحساب بدقة.' },
+            portRes: { en: 'Port reset didn’t clear the red light... is my subscription expired?', ar: 'تنشيط البورت ما شغّلش اللمبة... هو اشتراكي خلص؟' },
+            billRes: { en: 'OH! Today is the 27th?! I forgot to pay the 310 EGP bill! Paying via app now—thanks!', ar: 'أوه! النهارده ٢٧ في الشهر؟! نسيت خالص أدفع الـ ٣١٠ جنيه! هدفع من الأبلكيشن حالاً!' },
+            techRes: { en: 'Send a technician?! Did I just forget to pay the bill?', ar: 'فني ليه؟! استنى هو أنا بس نسيت أدفع الاشتراك؟' },
+            closeOk: { en: 'Invoice explained clearly. Reconnects once paid!', ar: 'تم توضيح الفاتورة المستحقة. النت هيرجع فور السداد!' },
+            closeBad: { en: 'Wait, you didn’t tell me why the internet light is red!', ar: 'استنى، إنت ما قلتليش اللمبة الحمرا سببها إيه!' },
+            hangup: { en: 'Waste of time! I’ll go to the branch myself! *CLICK*', ar: 'تضييع وقت! أنا نازل الفرع بنفسي! *قفل السكة*' },
+            winLog: { en: 'Caught an overdue 310 EGP invoice suspension via National ID.', ar: 'اكتشاف إيقاف الخط بسبب فاتورة متأخرة (٣١٠ جنيه) بالرقم القومي.' }
+          },
+          {
+            id: 'waleed', name: { en: 'Dr. Waleed', ar: 'د. وليد' }, role: { en: 'Medical Lecturer', ar: 'أستاذ جامعي في مؤتمر' },
+            avatar: 'doctor', color: '#0F766E', mood: 'calm', patience: 85, decay: 1.2,
+            lineStatus: 'high_attenuation', trueCause: 'dispatch_tech', also: [], alreadyRestarted: true,
+            nid: '27206100103318', pkg: { en: 'Mega 70 Mbps · 250 GB', ar: 'ميجا ٧٠ ميجا · ٢٥٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '60% Remaining', ar: 'متبقي ٦٠٪' },
+            att: '54.8 dB (CRITICAL)', snr: '4.1 dB (UNSTABLE)',
+            lights: { power: 'green', dsl: 'blink_amber', internet: 'off', los: 'off', wifi: 'green' },
+            fixed: { power: 'green', dsl: 'blink_amber', internet: 'off', los: 'off', wifi: 'green' },
+            open: { en: 'Good evening. My DSL drops every 10 minutes during my medical webinar. Could you check the line noise?', ar: 'مساء الخير. لمبة الـ DSL بتفصل كل ١٠ دقايق وسط محاضرة طبية. ممكن تفحص جودة الخط؟' },
+            idRes: { en: 'Certainly, 27206100103318.', ar: 'بالتأكيد، ٢٧٢٠٦١٠٠١٠٣٣١٨.' },
+            lineCheck: { en: 'Severe degradation: Attenuation 54.8 dB, SNR 4.1 dB! Outdoor copper box requires technician.', ar: 'تدهور شديد في الخط: تشويش ٥٤.٨ dB وSNR ٤.١ dB! يحتاج فني لفحص الكابينة والسلك الخارجي.' },
+            rebootFail: { en: 'Already power-cycled twice before calling. It drops whenever line noise spikes.', ar: 'قمت بإعادة تشغيله مرتين قبل الاتصال. ما زال يفصل بسبب التشويش.' },
+            calm: { en: 'Thank you, I appreciate your thoroughness.', ar: 'شكراً لك، أقدّر اهتمامك وأسلوبك المحترم.' },
+            portRes: { en: 'Synced briefly at 6 Mbps and dropped again. Copper wire outside is damaged.', ar: 'ربط لحظة على ٦ ميجا وفصل تاني. السلك الخارجي متهالك.' },
+            billRes: { en: 'Billing is on corporate autopay. Please inspect the SNR values.', ar: 'الفواتير مدفوعة تلقائياً. من فضلك راجع قيم التشويش الفنية.' },
+            techRes: { en: 'Thank you! Sending a technician to replace the outdoor junction box makes complete sense.', ar: 'شكراً جزيلاً! إرسال فني لفحص البوكس الخارجي قرار سليم تماماً.' },
+            closeOk: { en: 'Priority technical ticket dispatched. Thank you, Dr. Waleed!', ar: 'تم تسجيل بلاغ فني عاجل. شكراً لوقتك يا دكتور وليد!' },
+            closeBad: { en: 'Wait—we haven’t scheduled a line inspection yet.', ar: 'لحظة—لم نحدد موعد فحص لمشكلة التشويش بعد.' },
+            hangup: { en: 'I’ll switch to mobile data for my lecture. Goodbye. *CLICK*', ar: 'سأستخدم باقة الهاتف للمحاضرة. مع السلامة. *قفل السكة*' },
+            winLog: { en: 'Spotted critical 54.8 dB attenuation and dispatched outdoor repair.', ar: 'اكتشاف تشويش ٥٤.٨ dB وإرسال فني لإصلاح الكابل الخارجي.' }
+          },
+          {
+            id: 'mona', name: { en: 'Mona Ibrahim', ar: 'منى إبراهيم' }, role: { en: 'Busy Mom of Three', ar: 'أم لـ ٣ أطفال' },
+            avatar: 'mom', color: '#DB2777', mood: 'confused', patience: 86, decay: 1.2,
+            lineStatus: 'line_healthy', trueCause: 'polite_close', also: ['restart_router'], alreadyRestarted: false,
+            nid: '28401180102911', pkg: { en: 'Home 30 Mbps · 140 GB', ar: 'هوم ٣٠ ميجا · ١٤٠ جيجا' },
+            bill: { en: 'Paid · Active', ar: 'مدفوعة · ساري' }, quota: { en: '55% Remaining', ar: 'متبقي ٥٥٪' },
+            att: '13.9 dB', snr: '25.1 dB',
+            lights: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'off' },
+            fixed: { power: 'green', dsl: 'green', internet: 'green', los: 'off', wifi: 'green' },
+            open: { en: 'Hello! Internet light is green, TV works by cable, but NONE of our phones see Wi-Fi!', ar: 'ألو! لمبة النت خضرا والتليفزيون شغال بالسلك، بس موبايلاتنا كلها مش شايفة الواي فاي!' },
+            idRes: { en: '28401180102911. Wait—look at the router, the Wi-Fi light is OFF!', ar: '٢٨٤٠١١٨٠١٠٢٩١١. استنى—لمبة الـ Wi-Fi مطفية أصلاً!' },
+            lineCheck: { en: 'Line 100% healthy (25.1 dB SNR)! Physical WLAN side button was pressed off.', ar: 'الخط سليم ١٠٠٪! بس زرار الـ WLAN الجانبي حد داس عليه وقفل الواي فاي.' },
+            rebootOk: { en: 'Oh! While checking the power button I pressed the WLAN button too—Wi-Fi is back on all phones!!', ar: 'يا خبر! وأنا بطفي الراوتر دوست على زرار الواي فاي—الموبايلات لقطت تاني!!' },
+            rebootFail: { en: 'Restarting...', ar: 'بنجرب...' },
+            calm: { en: 'Haha! The kids probably pressed the side button behind the TV!', ar: 'هههه! أكيد العيال داسوا على الزرار وهما بيلعبوا ورا التليفزيون!' },
+            portRes: { en: 'TV is still fine, Wi-Fi symbol on the box is still dark though!', ar: 'التليفزيون شغال، بس علامة الواي فاي على الجهاز لسه مطفية!' },
+            billRes: { en: 'Bill is fine! Wait—my son just pressed the side WLAN button and Wi-Fi turned green!', ar: 'الفاتورة تمام! استنى—ابني داس على زرار الـ WLAN اللي في الجنب ونوّرت!' },
+            techRes: { en: 'A technician for a side button?! Wait, I just pressed WLAN myself and it worked!', ar: 'فني عشان زرار؟! استنى أنا دوست عليه بنفسي واشتغل!' },
+            closeOk: { en: 'Wi-Fi is working after pressing the side WLAN button! Thank you!', ar: 'الواي فاي اشتغل بعد ما دست على زرار الـ WLAN! شكراً جداً!' },
+            closeBad: { en: 'Wait, check the line first so I know why Wi-Fi disappeared!', ar: 'استنى، افحصلي الخط الأول عشان أتطمن الواي فاي اختفى ليه!' },
+            hangup: { en: 'Never mind, my husband pressed the Wi-Fi button! *CLICK*', ar: 'خلاص جوزي داس على زرار الواي فاي واشتغل! *قفل السكة*' },
+            winLog: { en: 'Identified accidental Wi-Fi side button press on a healthy line.', ar: 'اكتشاف قفل زرار الـ Wi-Fi الجانبي بالخطأ على خط سليم.' }
+          }
+        ];
+
+        // ---------- 3. WEB AUDIO SFX ENGINE ----------
+        var AudioCtx = window.AudioContext || window.webkitAudioContext;
+        var audioCtx = null;
+        var isMuted = false;
+
+        function playTone(freq, dur, type, vol, delay, endFreq) {
+          if (isMuted || !AudioCtx) return;
+          try {
+            if (!audioCtx) audioCtx = new AudioCtx();
+            if (audioCtx.state === 'suspended') audioCtx.resume().catch(function () {});
+            var now = audioCtx.currentTime + (delay || 0);
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            if (endFreq) osc.frequency.exponentialRampToValueAtTime(Math.max(40, endFreq), now + dur);
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(vol || 0.06, now + 0.012);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + dur + 0.02);
+          } catch (e) {}
+        }
+
+        var sfx = {
+          click: function () { playTone(680, 0.045, 'triangle', 0.05, 0, 420); },
+          ring: function () { playTone(880, 0.12, 'sine', 0.07, 0); playTone(1174, 0.16, 'sine', 0.08, 0.13); },
+          diag: function () { playTone(520, 0.07, 'square', 0.03, 0); playTone(780, 0.07, 'square', 0.03, 0.09); playTone(1040, 0.11, 'triangle', 0.05, 0.18); },
+          tick: function (s) { playTone(320 + (s % 3) * 60, 0.04, 'sine', 0.03, 0); },
+          rebootOk: function () { playTone(440, 0.1, 'triangle', 0.06, 0); playTone(659, 0.16, 'triangle', 0.07, 0.1); },
+          calm: function () { playTone(392, 0.16, 'sine', 0.05, 0); playTone(494, 0.2, 'sine', 0.05, 0.08); },
+          success: function () { playTone(523, 0.13, 'triangle', 0.07, 0); playTone(659, 0.13, 'triangle', 0.07, 0.09); playTone(784, 0.22, 'triangle', 0.08, 0.18); },
+          warn: function () { playTone(310, 0.12, 'sawtooth', 0.04, 0, 220); },
+          hangup: function () { playTone(480, 0.16, 'sawtooth', 0.06, 0, 260); playTone(320, 0.22, 'sawtooth', 0.06, 0.18, 170); }
+        };
+
+        // ---------- 4. VOICE ENGINE (TTS + STT) ----------
+        var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+        var voices = [];
+        var recognition = null;
+        var activeListening = false;
+        var keepListening = false;
+        var speakTimer = null;
+
+        function loadVoices() {
+          try {
+            if ('speechSynthesis' in window) {
+              var v = window.speechSynthesis.getVoices();
+              if (v && v.length) voices = v;
+            }
+          } catch (e) {}
+        }
+        try {
+          if ('speechSynthesis' in window) {
+            loadVoices();
+            if (window.speechSynthesis.addEventListener) {
+              window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+            }
+          }
+        } catch (e) {}
+
+        function pickVoice(langCode) {
+          loadVoices();
+          if (!voices.length) return null;
+          if (langCode === 'ar') {
+            return (
+              voices.find(function (v) { return v.lang.toLowerCase() === 'ar-eg'; }) ||
+              voices.find(function (v) { return v.lang.toLowerCase() === 'ar-sa'; }) ||
+              voices.find(function (v) { return v.lang.toLowerCase().indexOf('ar') === 0; }) ||
+              null
+            );
+          }
+          return (
+            voices.find(function (v) { return v.lang.toLowerCase() === 'en-us'; }) ||
+            voices.find(function (v) { return v.lang.toLowerCase() === 'en-gb'; }) ||
+            voices.find(function (v) { return v.lang.toLowerCase().indexOf('en') === 0; }) ||
+            null
+          );
+        }
+
+        function stopSpeaking() {
+          if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+          try {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+          } catch (e) {}
+          state.isSpeaking = false;
+          renderSpeakerBar();
+        }
+
+        function speakText(text, langCode, mood, patienceVal, onDone) {
+          stopSpeaking();
+          if (!('speechSynthesis' in window) || !text) {
+            if (onDone) onDone();
+            return;
+          }
+          var finished = false;
+          function finish() {
+            if (finished) return;
+            finished = true;
+            if (speakTimer) { clearTimeout(speakTimer); speakTimer = null; }
+            state.isSpeaking = false;
+            renderSpeakerBar();
+            if (onDone) onDone();
+          }
+          try {
+            var u = new SpeechSynthesisUtterance(text);
+            u.lang = langCode === 'ar' ? 'ar-EG' : 'en-US';
+            var v = pickVoice(langCode);
+            if (v) u.voice = v;
+            var boost = patienceVal < 35 ? 0.08 : 0;
+            if (mood === 'furious') { u.rate = 1.18 + boost; u.pitch = 1.16; }
+            else if (mood === 'impatient') { u.rate = 1.12 + boost; u.pitch = 1.08; }
+            else if (mood === 'sarcastic') { u.rate = 1.0; u.pitch = 0.93; }
+            else if (mood === 'confused') { u.rate = 0.92; u.pitch = 1.04; }
+            else { u.rate = 0.98; u.pitch = 1.0; }
+
+            u.onstart = function () { state.isSpeaking = true; renderSpeakerBar(); };
+            u.onend = finish;
+            u.onerror = finish;
+            if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+            window.speechSynthesis.speak(u);
+            speakTimer = setTimeout(finish, Math.max(3500, Math.min(14000, text.length * 145)));
+          } catch (e) {
+            finish();
+          }
+        }
+
+        function stopListening() {
+          keepListening = false;
+          if (recognition) {
+            var rec = recognition;
+            recognition = null;
+            try { rec.onend = null; rec.stop(); } catch (e) { try { rec.abort(); } catch (e2) {} }
+          }
+          activeListening = false;
+          state.isListening = false;
+          renderMicUI();
+        }
+
+        function startListening(continuousMode) {
+          state.micErr = null;
+          state.interimText = '';
+          if (!SpeechRec) {
+            state.micState = 'unsupported';
+            state.micErr = UI[state.lang].micErrorUnsupported;
+            state.continuousMic = false;
+            renderMicUI();
+            return;
+          }
+          stopSpeaking();
+          stopListening();
+          keepListening = continuousMode;
+          sfx.click();
+          try {
+            var rec = new SpeechRec();
+            rec.lang = state.lang === 'ar' ? 'ar-EG' : 'en-US';
+            rec.continuous = continuousMode;
+            rec.interimResults = true;
+            rec.maxAlternatives = 1;
+            rec.onstart = function () {
+              activeListening = true;
+              state.isListening = true;
+              state.micState = 'granted';
+              renderMicUI();
+            };
+            rec.onresult = function (ev) {
+              var interim = '';
+              var fin = '';
+              for (var i = ev.resultIndex; i < ev.results.length; i++) {
+                var piece = ev.results[i][0] ? ev.results[i][0].transcript : '';
+                if (ev.results[i].isFinal) fin += piece + ' ';
+                else interim += piece;
+              }
+              if (interim.trim()) {
+                state.interimText = interim.trim();
+                renderMicUI();
+              }
+              if (fin.trim()) {
+                state.interimText = '';
+                processSpokenOrTyped(fin.trim());
+              }
+            };
+            rec.onerror = function (ev) {
+              activeListening = false;
+              state.isListening = false;
+              var code = ev.error || 'unknown';
+              if (code === 'not-allowed' || code === 'service-not-allowed') {
+                keepListening = false;
+                state.continuousMic = false;
+                state.micState = 'denied';
+                state.micErr = UI[state.lang].micErrorNotAllowed;
+              } else if (code !== 'aborted' && code !== 'no-speech') {
+                keepListening = false;
+                state.continuousMic = false;
+                state.micErr = UI[state.lang].micErrorGeneric;
+              }
+              renderMicUI();
+            };
+            rec.onend = function () {
+              activeListening = false;
+              if (keepListening && state.continuousMic && state.gameState === 'PLAYING' && state.callOutcome === 'active') {
+                setTimeout(function () {
+                  if (keepListening && state.continuousMic) startListening(true);
+                }, 150);
+                return;
+              }
+              state.isListening = false;
+              renderMicUI();
+            };
+            recognition = rec;
+            rec.start();
+          } catch (e) {
+            keepListening = false;
+            state.continuousMic = false;
+            state.isListening = false;
+            state.micErr = UI[state.lang].micErrorGeneric;
+            renderMicUI();
+          }
+        }
+
+        // ---------- 5. EGYPTIAN ARABIC & ENGLISH INTENT PARSER ----------
+        function normalizeText(raw) {
+          var s = raw
+            .replace(/[\u064B-\u065F\u0670]/g, '')
+            .replace(/[أإآ]/g, 'ا')
+            .replace(/ة/g, 'ه')
+            .replace(/ى/g, 'ي')
+            .replace(/[٠-٩]/g, function (d) { return String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)); })
+            .toLowerCase()
+            .replace(/[^\w\u0600-\u06FF\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          return s;
+        }
+
+        var INTENT_RULES = [
+          { id: 'deescalate', pats: ['معلش', 'حقك عليا', 'حقك علينا', 'بعتذر', 'اعتذر', 'اسف', 'متاسف', 'اهدي', 'هدي', 'متزعلش', 'متتعصبش', 'حاضر', 'تحت امرك', 'من عيني', 'هحلها', 'متقلقش', 'فاهمك', 'sorry', 'apologize', 'calm down', 'understand', 'frustration', 'right away', 'bear with me'] },
+          { id: 'ask_id', pats: ['رقم قومي', 'الرقم القومي', 'قومي', 'بطاقه', 'البطاقه', 'اربعه عشر', '14 رقم', 'رقم الحساب', 'كود العميل', 'national id', 'id number', '14 digits', 'account number', 'your id'] },
+          { id: 'restart_router', pats: ['رستر', 'راستر', 'ريستارت', 'اطفي الراوتر', 'اطفي', 'اقفل الراوتر', 'اقفل', 'شغل الراوتر', 'افصل الكهربا', 'افصل الفيشه', 'عشر ثواني', '10 ثواني', 'اعاده تشغيل', 'ترستر', 'restart', 'reboot', 'unplug', 'power cycle', 'turn off', '10 seconds', 'ten seconds'] },
+          { id: 'check_line', pats: ['افحص الخط', 'فحص الخط', 'فحص', 'الخط', 'السيجنال', 'الاشاره', 'تشويش', 'لمبه حمراء', 'لمبه حمرا', 'احمر', 'los', 'snr', 'check line', 'line check', 'diagnostics', 'signal', 'attenuation', 'red light', 'scan'] },
+          { id: 'reset_port', pats: ['تنشيط البورت', 'تحديث البورت', 'بورت', 'البورت', 'ريسيت', 'البينج', 'البنج', 'reset port', 'refresh port', 'port reset', 'dslam', 'fix ping'] },
+          { id: 'explain_billing', pats: ['الفاتوره', 'فاتوره', 'الباقه', 'باقه', 'الرصيد', 'دفع', 'فوري', 'مراجعه', 'الاستهلاك', 'جيجا', 'جيجات', 'اشتراك', 'خلصت', 'تجديد', 'bill', 'billing', 'invoice', 'payment', 'paid', 'fawry', 'package', 'quota', 'usage'] },
+          { id: 'dispatch_tech', pats: ['فني', 'مهندس', 'صيانه', 'تحويل', 'تصعيد', 'زياره', 'سلك مقطوع', 'السلك الخارجي', 'كابينه', 'تيكت', 'technician', 'dispatch', 'escalate', 'field visit', 'engineer', 'cable cut', 'ticket'] },
+          { id: 'polite_close', pats: ['شكرا', 'مع السلامه', 'بالسلامه', 'انهاء', 'اقفل المكالمه', 'تم الحل', 'نهارك سعيد', 'thank you', 'thanks', 'goodbye', 'bye', 'wrap up', 'close ticket', 'all set'] }
+        ];
+
+        function parseIntents(raw) {
+          var norm = normalizeText(raw);
+          if (!norm) return [];
+          var found = [];
+          for (var i = 0; i < INTENT_RULES.length; i++) {
+            var rule = INTENT_RULES[i];
+            for (var j = 0; j < rule.pats.length; j++) {
+              var pat = normalizeText(rule.pats[j]);
+              var isShortAscii = /^[a-z0-9]{2,4}$/.test(pat);
+              var match = isShortAscii ? new RegExp('\\b' + pat + '\\b', 'i').test(norm) : norm.indexOf(pat) !== -1;
+              if (match) {
+                found.push(rule.id);
+                break;
+              }
+            }
+          }
+          return found;
+        }
+
+        // ---------- 6. GAME STATE ----------
+        var state = {
+          lang: 'en',
+          gameState: 'TITLE_MENU',
+          shiftMode: 'standard',
+          muted: false,
+          voiceEnabled: true,
+          hasAudioSetup: false,
+          pendingStart: false,
+          micState: SpeechRec ? 'pending' : 'unsupported',
+          isSpeaking: false,
+          isListening: false,
+          continuousMic: false,
+          interimText: '',
+          finalHeard: '',
+          intents: [],
+          unrecognized: false,
+          micErr: null,
+          lastCallerLine: null,
+          shiftTime: 150,
+          score: 0,
+          csat: 4.6,
+          streak: 0,
+          bestStreak: 0,
+          reboots: 0,
+          idsVerified: 0,
+          tickets: [],
+          queue: [],
+          scenario: SCENARIOS[0],
+          patience: 82,
+          mood: 'impatient',
+          lights: SCENARIOS[0].lights,
+          idRevealed: false,
+          lineChecked: false,
+          deescalateCount: 0,
+          callElapsed: 0,
+          transcript: [],
+          callOutcome: 'active',
+          outcomePts: 0,
+          outcomeCsat: 0,
+          isRebooting: false,
+          rebootLeft: 10,
+          isCheckingLine: false
+        };
+
+        var simTimer = null;
+        var rebootTimer = null;
+        var lineTimer = null;
+        var speakDelay = null;
+        var spaceHeld = false;
+        var micPressTime = 0;
+        var lastAvatarKey = '';
+        var lastActionsKey = '';
+        var lastTranscriptKey = '';
+        var lastIntentsKey = '';
+
+        function $(id) { return document.getElementById(id); }
+
+        function shuffle(arr, avoidId) {
+          var copy = arr.slice();
+          for (var i = copy.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = copy[i]; copy[i] = copy[j]; copy[j] = tmp;
+          }
+          if (avoidId && copy.length > 1 && copy[0].id === avoidId) {
+            var t = copy[0]; copy[0] = copy[1]; copy[1] = t;
+          }
+          return copy;
+        }
+
+        function fmtClock(sec) {
+          var c = Math.max(0, Math.floor(sec));
+          var m = Math.floor(c / 60);
+          var s = c % 60;
+          return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        function avatarSvg(sc, mood) {
+          var angry = mood === 'furious' || mood === 'impatient';
+          var happy = mood === 'calm';
+          var mouth = angry
+            ? '<path d="M28 36 Q32 33 36 36" stroke="#7F1D1D" stroke-width="1.7" fill="none" stroke-linecap="round"/>'
+            : happy
+            ? '<path d="M28 34.5 Q32 38 36 34.5" stroke="#0F172A" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+            : '<line x1="29" y1="35.5" x2="35" y2="35.5" stroke="#0F172A" stroke-width="1.6" stroke-linecap="round"/>';
+          var headExtra = '';
+          if (sc.avatar === 'hajja') {
+            headExtra = '<path d="M18 32 C18 14,46 14,46 32 L48 48 C42 46,22 46,16 48 Z" fill="#E2E8F0" stroke="#475569" stroke-width="1.4"/><circle cx="32" cy="30" r="10.5" fill="#FDE6C4"/>';
+          } else if (sc.avatar === 'gamer') {
+            headExtra = '<circle cx="32" cy="31" r="10.5" fill="#F5CBA7"/><path d="M21 27 C21 18,43 18,43 27" fill="none" stroke="#DC2626" stroke-width="3"/><rect x="18" y="25" width="4" height="9" rx="2" fill="#1E293B"/><rect x="42" y="25" width="4" height="9" rx="2" fill="#1E293B"/>';
+          } else if (sc.avatar === 'auntie' || sc.avatar === 'mom') {
+            headExtra = '<path d="M19 30 C19 15,45 15,45 30 L47 46 L17 46 Z" fill="#334155"/><circle cx="32" cy="30" r="10" fill="#F5CBA7"/>';
+          } else {
+            headExtra = '<circle cx="32" cy="31" r="10.5" fill="#F1C29B"/><path d="M21.5 27 C21.5 18,42.5 18,42.5 27 C39 22,25 22,21.5 27 Z" fill="#1E293B"/>';
+          }
+          return (
+            '<svg viewBox="0 0 64 64" width="54" height="54" style="background:' + sc.color + '18">' +
+            '<path d="M14 60 C14 47,50 47,50 60 Z" fill="' + sc.color + '"/>' +
+            headExtra +
+            '<circle cx="28" cy="30" r="1.4" fill="#0F172A"/><circle cx="36" cy="30" r="1.4" fill="#0F172A"/>' +
+            mouth + '</svg>'
+          );
+        }
+
+        // ---------- 7. RENDER FUNCTIONS ----------
+        function renderTexts() {
+          var t = UI[state.lang];
+          document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+          document.documentElement.lang = state.lang;
+
+          $('t-brand-name').textContent = t.brandTitle;
+          $('btn-title-guide').textContent = t.howToTitle.split(' ')[0] === 'How' ? 'Guide' : 'طريقة اللعب';
+          $('btn-title-mute').textContent = state.muted ? t.unmuteBtn : t.muteBtn;
+          $('btn-title-lang').textContent = t.langToggle;
+          $('t-start-title').textContent = t.startTitle;
+          $('t-start-subtitle').textContent = t.startSubtitle;
+          $('t-mode-label').textContent = t.selectShiftMode;
+          $('mode-quick').textContent = t.modeQuick;
+          $('mode-standard').textContent = t.modeStandard;
+          $('mode-endless').textContent = t.modeEndless;
+          $('t-start-cta').textContent = t.startShiftCta;
+          $('t-art-sub').textContent = t.brandSubtitle;
+          $('t-controls-hint').textContent = t.controlsHint;
+
+          $('h-brand-title').textContent = t.brandTitle;
+          $('h-brand-sub').textContent = t.brandSubtitle;
+          $('h-lbl-timer').textContent = t.shiftTimer;
+          $('h-lbl-csat').textContent = t.csatLabel;
+          $('h-lbl-score').textContent = t.scoreLabel;
+          $('btn-end-shift').textContent = t.endShiftNowBtn;
+          $('btn-audio-setup').textContent = t.audioSetupBtn;
+          $('btn-pause').textContent = state.gameState === 'PAUSED' ? t.resumeBtn : t.pauseBtn;
+          $('btn-restart').textContent = t.restartShiftBtn;
+          $('btn-mute').textContent = state.muted ? t.unmuteBtn : t.muteBtn;
+          $('btn-lang').textContent = t.langToggle;
+
+          $('c-kicker').textContent = t.incomingCallLabel;
+          $('c-patience-lbl').textContent = t.patienceLabel;
+          $('c-symptom-lbl').textContent = t.lineStatusLabel;
+          $('r-title').textContent = t.routerUnitTitle;
+          $('lbl-led-power').textContent = t.ledPower;
+          $('lbl-led-dsl').textContent = t.ledDsl;
+          $('lbl-led-internet').textContent = t.ledInternet;
+          $('lbl-led-los').textContent = t.ledLos;
+          $('lbl-led-wifi').textContent = t.ledWifi;
+          $('r-reboot-lbl').textContent = t.rebootingBanner;
+          $('scan-banner').textContent = t.checkingLineBanner;
+
+          $('crm-title').textContent = t.accountSnapshotTitle;
+          $('k-nid').textContent = t.nationalIdLabel;
+          $('k-pkg').textContent = t.packageLabel;
+          $('k-bill').textContent = t.billingLabel;
+          $('k-quota').textContent = t.quotaLabel;
+          $('k-att').textContent = t.attenuationLabel;
+          $('k-snr').textContent = t.snrLabel;
+
+          $('btn-repeat-line').textContent = t.repeatLineBtn;
+          $('btn-voice-toggle').textContent = t.voiceToggleLabel;
+          $('t-transcript-title').textContent = t.transcriptTitle;
+          $('m-title').textContent = t.liveTranscriptLabel;
+          $('text-input').placeholder = t.textFallbackPlaceholder;
+          $('btn-send').textContent = t.sendBtn;
+
+          $('a-title').textContent = t.actionsTitle;
+          $('btn-quick-next').textContent = t.quickNextBtn;
+          $('a-diag-title').textContent = t.diagnosticsGroup;
+          $('a-res-title').textContent = t.resolutionGroup;
+          $('patience-warn').textContent = t.patienceWarn;
+
+          $('ma-title').textContent = t.audioModalTitle;
+          $('ma-desc').textContent = t.audioModalDesc;
+          $('ma-spk-title').textContent = t.speakerSectionTitle;
+          $('ma-spk-status').textContent = 'speechSynthesis' in window ? t.speakerSupported : t.speakerUnsupported;
+          $('ma-btn-test').textContent = t.testSpeakerBtn;
+          $('ma-mic-title').textContent = t.micSectionTitle;
+          $('ma-btn-mic').textContent = t.enableMicBtn;
+          $('ma-btn-textonly').textContent = t.continueTextOnlyBtn;
+          $('ma-btn-start').textContent = state.pendingStart ? t.continueWithAudioBtn : t.closeBtn;
+
+          $('mg-title').textContent = t.howToTitle;
+          $('mg-intro').textContent = t.howToIntro;
+          $('mg-hint').textContent = t.controlsHint;
+          $('mg-ok').textContent = t.closeBtn;
+          $('mg-rules').innerHTML = t.howToRules.map(function (r) {
+            return '<div style="padding:10px 12px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;line-height:1.5">' + r + '</div>';
+          }).join('');
+
+          $('mp-title').textContent = t.pausedTitle;
+          $('mp-desc').textContent = t.pausedDesc;
+          $('mp-resume').textContent = t.resumeBtn;
+          $('mp-end').textContent = t.endShiftNowBtn;
+
+          $('dh-title').textContent = t.historyDrawerTitle;
+          $('ms-brand').textContent = t.brandTitle;
+          $('ms-title').textContent = t.summaryTitle;
+          $('ms-k-score').textContent = t.summaryScore;
+          $('ms-k-res').textContent = t.summaryResolved;
+          $('ms-k-drop').textContent = t.summaryDropped;
+          $('ms-k-strk').textContent = t.summaryBestStreak;
+          $('ms-k-calls').textContent = t.summaryCalls;
+          $('ms-k-reboots').textContent = t.summaryReboots;
+          $('ms-k-ids').textContent = t.summaryIds;
+          $('ms-back').textContent = t.summaryBackTitle;
+          $('ms-again').textContent = t.summaryPlayAgain;
+
+          renderAudioModalStatus();
+          renderSpeakerBar();
+          renderMicUI();
+          renderGame();
+        }
+
+        function renderAudioModalStatus() {
+          var t = UI[state.lang];
+          var spkVoice = pickVoice(state.lang);
+          $('ma-spk-voice').textContent = spkVoice ? spkVoice.name + ' (' + spkVoice.lang + ')' : '';
+          var micEl = $('ma-mic-status');
+          if (state.micState === 'granted') { micEl.textContent = '✓ ' + t.micGranted; micEl.style.color = '#059669'; $('ma-btn-mic').classList.add('hidden'); }
+          else if (state.micState === 'denied') { micEl.textContent = t.micDenied; micEl.style.color = '#dc2626'; $('ma-btn-mic').classList.remove('hidden'); }
+          else if (state.micState === 'unsupported' || !SpeechRec) { micEl.textContent = t.micUnsupported; micEl.style.color = '#d97706'; $('ma-btn-mic').classList.add('hidden'); }
+          else { micEl.textContent = t.micPending; micEl.style.color = '#475569'; $('ma-btn-mic').classList.remove('hidden'); }
+        }
+
+        function renderSpeakerBar() {
+          var t = UI[state.lang];
+          var bars = $('wave-bars').children;
+          for (var i = 0; i < bars.length; i++) {
+            bars[i].className = 'wave-bar' + (state.isSpeaking ? ' speaking' : '');
+            bars[i].style.animationDelay = state.isSpeaking ? i * 110 + 'ms' : '';
+          }
+          $('speaker-status').textContent = (!state.voiceEnabled || state.muted) ? t.voiceMutedLabel : state.isSpeaking ? t.callerSpeakingLabel : t.speakerReadyLabel;
+          $('btn-voice-toggle').className = 'btn-mini-dark' + (state.voiceEnabled && !state.muted ? ' btn-voice-on' : '');
+          $('btn-repeat-line').disabled = !state.lastCallerLine;
+        }
+
+        function renderMicUI() {
+          var t = UI[state.lang];
+          $('m-status-lbl').textContent = state.isListening ? t.micListeningLabel : t.micHoldLabel;
+          $('m-status-lbl').style.color = state.isListening ? '#dc2626' : '#64748b';
+          var holdBtn = $('btn-mic-hold');
+          var contBtn = $('btn-mic-cont');
+          holdBtn.textContent = '🎙️ ' + t.micHoldLabel;
+          holdBtn.className = 'btn-mic-hold' + (state.isListening && !state.continuousMic ? ' listening' : '');
+          holdBtn.disabled = state.callOutcome !== 'active' || state.micState === 'unsupported';
+          contBtn.textContent = state.continuousMic && state.isListening ? '⏹ ' + t.micStopListenBtn : '📡 ' + t.micToggleListenBtn;
+          contBtn.className = 'btn-mic-cont' + (state.continuousMic && state.isListening ? ' listening' : '');
+          contBtn.disabled = state.callOutcome !== 'active' || state.micState === 'unsupported';
+
+          var sttText = $('stt-text');
+          if (state.interimText) { sttText.textContent = state.interimText; sttText.style.color = '#1d4ed8'; sttText.style.fontStyle = 'italic'; }
+          else if (state.finalHeard) { sttText.textContent = '“' + state.finalHeard + '”'; sttText.style.color = '#0f172a'; sttText.style.fontStyle = 'normal'; }
+          else { sttText.textContent = t.liveTranscriptPlaceholder; sttText.style.color = '#64748b'; sttText.style.fontStyle = 'normal'; }
+
+          var intentsEl = $('stt-intents');
+          var intentsKey = state.lang + ':' + state.intents.join(',');
+          if (state.intents.length) {
+            intentsEl.classList.remove('hidden');
+            if (intentsKey !== lastIntentsKey) {
+              lastIntentsKey = intentsKey;
+              intentsEl.innerHTML = '<span style="font-weight:700;color:#64748b">' + t.recognizedIntentLabel + ':</span>' +
+                state.intents.map(function (id) {
+                  var def = ACTIONS.find(function (a) { return a.id === id; });
+                  return '<span class="intent-chip">' + (def ? def.label[state.lang] : id) + '</span>';
+                }).join('');
+            }
+          } else {
+            lastIntentsKey = '';
+            intentsEl.classList.add('hidden');
+          }
+
+          var hintEl = $('stt-hint');
+          if (state.unrecognized) { hintEl.classList.remove('hidden'); hintEl.textContent = t.noIntentDetected; }
+          else { hintEl.classList.add('hidden'); }
+
+          var errEl = $('stt-err');
+          if (state.micErr) { errEl.classList.remove('hidden'); errEl.textContent = state.micErr; }
+          else { errEl.classList.add('hidden'); }
+
+          var inputDisabled = state.callOutcome !== 'active' || state.isRebooting || state.isCheckingLine;
+          $('text-input').disabled = inputDisabled;
+          $('btn-send').disabled = inputDisabled;
+        }
+
+        function renderRouter() {
+          var L = state.lights;
+          if (state.isRebooting) {
+            if (state.rebootLeft > 7) L = { power: 'off', dsl: 'off', internet: 'off', los: 'off', wifi: 'off' };
+            else if (state.rebootLeft > 4) L = { power: 'amber', dsl: 'off', internet: 'off', los: 'off', wifi: 'off' };
+            else L = { power: 'green', dsl: 'blink_amber', internet: 'off', los: state.lights.los, wifi: 'green' };
+          }
+          function cls(v) {
+            if (v === 'green') return 'led-dot led-green';
+            if (v === 'blink_green') return 'led-dot led-green led-blink-fast';
+            if (v === 'amber') return 'led-dot led-amber';
+            if (v === 'blink_amber') return 'led-dot led-amber led-blink-slow';
+            if (v === 'red') return 'led-dot led-red';
+            if (v === 'red_blink') return 'led-dot led-red led-blink-fast';
+            return 'led-dot';
+          }
+          $('led-power').className = cls(L.power);
+          $('led-dsl').className = cls(L.dsl);
+          $('led-internet').className = cls(L.internet);
+          $('led-los').className = cls(L.los);
+          $('led-wifi').className = cls(L.wifi);
+
+          if (state.isRebooting) {
+            $('reboot-box').classList.remove('hidden');
+            $('r-reboot-sec').textContent = state.rebootLeft + 's';
+            $('r-reboot-fill').style.width = ((10 - state.rebootLeft) / 10) * 100 + '%';
+          } else {
+            $('reboot-box').classList.add('hidden');
+          }
+          if (state.isCheckingLine && !state.isRebooting) $('scan-banner').classList.remove('hidden');
+          else $('scan-banner').classList.add('hidden');
+        }
+
+        function renderActionButtons() {
+          var disabled = state.callOutcome !== 'active' || state.isRebooting || state.isCheckingLine;
+          var actionsKey = state.lang + ':' + disabled + ':' + state.idRevealed + ':' + state.lineChecked;
+          if (actionsKey !== lastActionsKey) {
+            lastActionsKey = actionsKey;
+            function makeBtn(a, isRes) {
+              var done = (a.id === 'ask_id' && state.idRevealed) || (a.id === 'check_line' && state.lineChecked);
+              return (
+                '<button type="button" class="action-btn' + (isRes ? ' res-btn' : '') + '" data-action="' + a.id + '"' + (disabled ? ' disabled' : '') + '>' +
+                '<div style="display:flex;align-items:center;gap:10px;min-width:0">' +
+                '<div class="action-icon' + (done ? ' done' : '') + '">' + a.icon + '</div>' +
+                '<div style="min-width:0"><div class="action-title">' + a.label[state.lang] + '</div><div class="action-sub">' + a.sub[state.lang] + '</div></div>' +
+                '</div>' +
+                '<span class="mono" style="font-size:11px;color:#94a3b8;font-weight:700">[' + a.shortcut + ']</span></button>'
+              );
+            }
+            $('diag-actions').innerHTML = ACTIONS.filter(function (a) { return a.group === 'diagnostic'; }).map(function (a) { return makeBtn(a, false); }).join('');
+            $('res-actions').innerHTML = ACTIONS.filter(function (a) { return a.group === 'resolution'; }).map(function (a) { return makeBtn(a, true); }).join('');
+          }
+          if (state.callOutcome !== 'active') $('btn-quick-next').classList.remove('hidden');
+          else $('btn-quick-next').classList.add('hidden');
+        }
+
+        function renderTranscript() {
+          var t = UI[state.lang];
+          var transcriptKey = state.lang + ':' + state.scenario.id + ':' + state.transcript.length + ':' + state.callOutcome + ':' + state.outcomePts;
+          if (transcriptKey === lastTranscriptKey) return;
+          lastTranscriptKey = transcriptKey;
+          var feed = $('transcript-feed');
+          var html = state.transcript.map(function (m) {
+            var displayLang = m.forceLang || state.lang;
+            if (m.sender === 'system') {
+              return '<div class="msg-system"><div class="msg-meta"><strong>' + t.systemLabel + '</strong><span class="mono">' + m.ts + '</span></div><div>' + escapeHtml(m.text[displayLang]) + '</div></div>';
+            }
+            var who = m.sender === 'agent' ? t.agentLabel : state.scenario.name[state.lang];
+            return '<div class="msg-row ' + m.sender + '"><div class="msg-bubble"><div class="msg-meta"><strong>' + escapeHtml(who) + '</strong><span class="mono">' + m.ts + '</span></div><div>' + escapeHtml(m.text[displayLang]) + '</div></div></div>';
+          }).join('');
+
+          if (state.callOutcome !== 'active') {
+            var ok = state.callOutcome === 'resolved';
+            var pts = (state.outcomePts >= 0 ? '+' : '') + state.outcomePts;
+            var cs = (state.outcomeCsat >= 0 ? '+' : '') + state.outcomeCsat.toFixed(1);
+            var summaryTxt = ok ? state.scenario.winLog[state.lang] : state.scenario.hangup[state.lang];
+            html +=
+              '<div class="outcome-card ' + (ok ? 'outcome-resolved' : 'outcome-dropped') + '">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:14px">' +
+              '<span>' + (ok ? '✅ ' + t.callResolvedTag : '📵 ' + t.callDroppedTag) + '</span>' +
+              '<span class="mono" style="font-size:12px">' + pts + ' pts · ' + cs + '★</span></div>' +
+              '<div style="font-size:12px;line-height:1.45">' + escapeHtml(summaryTxt) + '</div>' +
+              '<button id="btn-inline-next" type="button" class="btn-next-call">📞 ' + t.nextCallBtn + '</button></div>';
+          }
+
+          feed.innerHTML = html;
+          var nextBtn = $('btn-inline-next');
+          if (nextBtn) nextBtn.onclick = nextCall;
+          feed.scrollTop = feed.scrollHeight;
+        }
+
+        function escapeHtml(str) {
+          return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function renderGame() {
+          var t = UI[state.lang];
+          var isTitle = state.gameState === 'TITLE_MENU';
+          $('title-screen').classList.toggle('hidden', !isTitle);
+          $('game-screen').classList.toggle('hidden', isTitle);
+          $('modal-pause').classList.toggle('hidden', state.gameState !== 'PAUSED');
+          $('modal-summary').classList.toggle('hidden', state.gameState !== 'SHIFT_SUMMARY');
+
+          if (isTitle) return;
+
+          var resCount = state.tickets.filter(function (x) { return x.status === 'resolved'; }).length;
+          var dropCount = state.tickets.filter(function (x) { return x.status === 'dropped'; }).length;
+          $('h-val-timer').textContent = fmtClock(state.shiftTime);
+          $('h-val-timer').style.color = state.shiftMode !== 'endless' && state.shiftTime <= 20 ? '#dc2626' : '#0f172a';
+          $('h-val-csat').textContent = state.csat.toFixed(1);
+          $('h-val-score').textContent = String(state.score);
+          $('h-val-streak').textContent = state.streak >= 2 ? '· ' + state.streak + 'x' : '';
+          $('h-val-counts').textContent = resCount + ' ' + t.resolvedLabel + ' · ' + dropCount + ' ' + t.droppedLabel;
+          $('btn-history').textContent = t.historyBtn + ' (' + state.tickets.length + ')';
+          $('btn-end-shift').classList.toggle('hidden', state.shiftMode !== 'endless');
+          $('t-call-clock').textContent = fmtClock(state.callElapsed);
+
+          var sc = state.scenario;
+          var avatarKey = sc.id + ':' + state.mood;
+          if (avatarKey !== lastAvatarKey) {
+            lastAvatarKey = avatarKey;
+            $('caller-avatar').innerHTML = avatarSvg(sc, state.mood);
+          }
+          $('c-name').textContent = sc.name[state.lang];
+          $('c-role').textContent = sc.role[state.lang];
+          var moodEl = $('c-mood');
+          moodEl.textContent = MOODS[state.mood][state.lang];
+          moodEl.className = 'mood-badge mood-' + state.mood;
+
+          var p = Math.round(state.patience);
+          $('c-patience-val').textContent = p + '%';
+          $('c-patience-val').style.color = p > 55 ? '#047857' : p > 28 ? '#b45309' : '#dc2626';
+          $('c-patience-bar').style.width = Math.max(0, Math.min(100, state.patience)) + '%';
+          $('c-patience-bar').style.background = p > 55 ? '#059669' : p > 28 ? '#f59e0b' : '#dc2626';
+          $('c-symptom-val').textContent = LINE_LABELS[sc.lineStatus][state.lang];
+          $('patience-warn').classList.toggle('hidden', !(state.callOutcome === 'active' && state.patience <= 30));
+
+          $('v-nid').textContent = state.idRevealed ? sc.nid : t.unverifiedText;
+          $('v-pkg').textContent = state.idRevealed ? sc.pkg[state.lang] : '—';
+          $('v-bill').textContent = state.idRevealed ? sc.bill[state.lang] : '—';
+          $('v-bill').style.color = state.idRevealed && sc.lineStatus === 'billing_hold' ? '#dc2626' : '#0f172a';
+          $('v-quota').textContent = state.idRevealed ? sc.quota[state.lang] : '—';
+          $('v-quota').style.color = state.idRevealed && sc.lineStatus === 'quota_exhausted' ? '#b45309' : '#0f172a';
+          $('v-att').textContent = state.lineChecked ? sc.att : t.notScannedText;
+          $('v-snr').textContent = state.lineChecked ? sc.snr : t.notScannedText;
+
+          renderRouter();
+          renderActionButtons();
+          renderTranscript();
+          renderMicUI();
+        }
+
+        function renderHistoryDrawer() {
+          var t = UI[state.lang];
+          var list = $('dh-list');
+          if (!state.tickets.length) {
+            list.innerHTML = '<div style="text-align:center;padding:40px 12px;color:#64748b;font-size:13px">' + t.historyEmpty + '</div>';
+            return;
+          }
+          list.innerHTML = state.tickets.map(function (item) {
+            var ok = item.status === 'resolved';
+            return (
+              '<div style="border:1px solid #e2e8f0;background:#f8fafc;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px">' +
+              '<div style="display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:13.5px">' +
+              '<span>' + escapeHtml(item.scenario.name[state.lang]) + '</span>' +
+              '<span style="font-size:12px;color:' + (ok ? '#047857' : '#dc2626') + '">' + (ok ? t.callResolvedTag : t.callDroppedTag) + '</span></div>' +
+              '<div style="font-size:12px;color:#475569;line-height:1.45">' + escapeHtml(item.summary[state.lang]) + '</div>' +
+              '<div class="mono" style="font-size:11px;color:#64748b;display:flex;justify-content:space-between;border-top:1px solid #e2e8f0;padding-top:6px">' +
+              '<span>' + (item.pts >= 0 ? '+' : '') + item.pts + ' pts</span>' +
+              '<span>CSAT ' + (item.csat >= 0 ? '+' : '') + item.csat.toFixed(1) + '★</span>' +
+              '<span>' + item.sec + 's</span></div></div>'
+            );
+          }).join('');
+        }
+
+        function renderSummary() {
+          var res = state.tickets.filter(function (x) { return x.status === 'resolved'; }).length;
+          var drop = state.tickets.filter(function (x) { return x.status === 'dropped'; }).length;
+          var rank = res >= 7 && state.csat >= 4.6
+            ? { en: 'Legend of Desk 111', ar: 'أسطورة مكتب ١١١' }
+            : state.csat >= 4.4 && res >= 4
+            ? { en: 'Senior Router Whisperer', ar: 'همّاس الراوترات المحترف' }
+            : state.csat >= 3.8 && res >= 2
+            ? { en: 'Steady Shift Specialist', ar: 'أخصائي دعم فني صامد' }
+            : { en: 'Survivor of the Night Shift', ar: 'ناجي من وردية الليل' };
+
+          $('ms-csat').textContent = '★ ' + state.csat.toFixed(1);
+          $('ms-rank').textContent = rank[state.lang];
+          $('ms-v-score').textContent = String(state.score);
+          $('ms-v-res').textContent = String(res);
+          $('ms-v-drop').textContent = String(drop);
+          $('ms-v-strk').textContent = state.bestStreak + 'x';
+          $('ms-v-calls').textContent = String(state.tickets.length);
+          $('ms-v-reboots').textContent = String(state.reboots);
+          $('ms-v-ids').textContent = String(state.idsVerified);
+
+          var note;
+          if (state.reboots >= 4) {
+            note = state.lang === 'ar'
+              ? 'طلبت "اطفي الراوتر ١٠ ثواني" ' + state.reboots + ' مرات — روح موظف خدمة العملاء الحقيقي تلبّستك!'
+              : 'You ordered a "10-Second Router Reboot" ' + state.reboots + ' times — pure Egyptian ISP muscle memory!';
+          } else if (drop === 0 && res > 0) {
+            note = state.lang === 'ar'
+              ? 'ولا عميل قفل السكة في وشك! تستاهل بونص شاي بالنعناع من الإدارة.'
+              : 'Zero angry hang-ups all shift! Management owes you a fresh glass of mint tea.';
+          } else {
+            note = state.lang === 'ar'
+              ? 'تم التعامل مع ' + state.tickets.length + ' مكالمة في هذه الوردية. كل نداء وله حكاية في تيلي-مصر!'
+              : 'Handled ' + state.tickets.length + ' wild calls this shift. Another normal night at Tele-Masr 111!';
+          }
+          $('ms-note').textContent = note;
+        }
+
+        // ---------- 8. CORE GAMEPLAY ENGINE ----------
+        function clearTimers() {
+          if (rebootTimer) { clearInterval(rebootTimer); rebootTimer = null; }
+          if (lineTimer) { clearTimeout(lineTimer); lineTimer = null; }
+          if (speakDelay) { clearTimeout(speakDelay); speakDelay = null; }
+          state.isRebooting = false;
+          state.isCheckingLine = false;
+        }
+
+        function speakCaller(lineObj, moodVal, patVal, delay, langOverride) {
+          var speakLang = langOverride || state.lang;
+          state.lastCallerLine = { line: lineObj, lang: speakLang };
+          renderSpeakerBar();
+          if (!state.voiceEnabled || state.muted) return;
+          if (speakDelay) clearTimeout(speakDelay);
+          function go() {
+            var shouldResume = state.continuousMic && activeListening;
+            if (shouldResume) stopListening();
+            speakText(lineObj[speakLang], speakLang, moodVal, patVal, function () {
+              if (shouldResume && state.continuousMic && state.gameState === 'PLAYING' && state.callOutcome === 'active') {
+                startListening(true);
+              }
+            });
+          }
+          if (delay > 0) speakDelay = setTimeout(go, delay);
+          else go();
+        }
+
+        function loadCaller(sc) {
+          clearTimers();
+          stopSpeaking();
+          state.scenario = sc;
+          state.patience = sc.patience;
+          state.mood = sc.mood;
+          state.lights = sc.lights;
+          state.idRevealed = false;
+          state.lineChecked = false;
+          state.deescalateCount = 0;
+          state.callElapsed = 0;
+          state.callOutcome = 'active';
+          state.interimText = '';
+          state.finalHeard = '';
+          state.intents = [];
+          state.unrecognized = false;
+          state.transcript = [{ sender: 'caller', text: sc.open, ts: '00:00' }];
+          renderGame();
+          sfx.ring();
+          speakCaller(sc.open, sc.mood, sc.patience, 260);
+        }
+
+        function startShift() {
+          sfx.click();
+          var q = shuffle(SCENARIOS);
+          state.shiftTime = state.shiftMode === 'quick' ? 90 : state.shiftMode === 'standard' ? 150 : 0;
+          state.score = 0;
+          state.csat = 4.6;
+          state.streak = 0;
+          state.bestStreak = 0;
+          state.reboots = 0;
+          state.idsVerified = 0;
+          state.tickets = [];
+          state.queue = q.slice(1);
+          state.gameState = 'PLAYING';
+          $('drawer-history').classList.add('hidden');
+          $('modal-guide').classList.add('hidden');
+          loadCaller(q[0]);
+        }
+
+        function nextCall() {
+          sfx.click();
+          if (!state.queue.length) state.queue = shuffle(SCENARIOS, state.scenario.id);
+          var sc = state.queue.shift();
+          loadCaller(sc);
+        }
+
+        function addMsg(sender, textObj, forceLang) {
+          state.transcript.push({ sender: sender, text: textObj, forceLang: forceLang || null, ts: fmtClock(state.callElapsed) });
+        }
+
+        function endCall(status, fixedLights) {
+          clearTimers();
+          state.callOutcome = status;
+          if (status === 'resolved') {
+            sfx.success();
+            state.mood = 'calm';
+            if (fixedLights) state.lights = fixedLights;
+            state.streak += 1;
+            state.bestStreak = Math.max(state.bestStreak, state.streak);
+            var pts = 150 + Math.round(state.patience * 0.8) + (state.idRevealed ? 25 : 0) + (state.lineChecked ? 25 : 0) + (state.streak - 1) * 35;
+            var cs = state.patience >= 60 ? 0.2 : 0.1;
+            state.outcomePts = pts;
+            state.outcomeCsat = cs;
+            state.score += pts;
+            state.csat = Math.min(5.0, Math.round((state.csat + cs) * 10) / 10);
+            state.tickets.unshift({ scenario: state.scenario, status: 'resolved', pts: pts, csat: cs, summary: state.scenario.winLog, sec: Math.round(state.callElapsed) });
+          } else {
+            sfx.hangup();
+            state.mood = 'furious';
+            state.streak = 0;
+            state.outcomePts = -50;
+            state.outcomeCsat = -0.4;
+            state.score = Math.max(0, state.score - 50);
+            state.csat = Math.max(1.0, Math.round((state.csat - 0.4) * 10) / 10);
+            addMsg('caller', state.scenario.hangup);
+            speakCaller(state.scenario.hangup, 'furious', 0, 220);
+            state.tickets.unshift({
+              scenario: state.scenario,
+              status: 'dropped',
+              pts: -50,
+              csat: -0.4,
+              summary: { en: 'Caller hung up (' + LINE_LABELS[state.scenario.lineStatus].en + ').', ar: 'أغلق العميل الخط (' + LINE_LABELS[state.scenario.lineStatus].ar + ').' },
+              sec: Math.round(state.callElapsed)
+            });
+            var card = $('caller-card');
+            card.classList.remove('shake');
+            void card.offsetWidth;
+            card.classList.add('shake');
+          }
+          renderGame();
+        }
+
+        function adjustPatience(delta, newMood) {
+          if (newMood) state.mood = newMood;
+          state.patience = Math.min(100, Math.max(0, state.patience + delta));
+          if (state.patience <= 0 && state.callOutcome === 'active') {
+            endCall('dropped');
+          } else {
+            renderGame();
+          }
+        }
+
+        function executeAction(actionId, opts) {
+          if (state.gameState !== 'PLAYING' || state.callOutcome !== 'active' || state.isRebooting || state.isCheckingLine) return;
+          opts = opts || {};
+          var sc = state.scenario;
+          var replyLang = opts.replyLang || state.lang;
+          var def = ACTIONS.find(function (a) { return a.id === actionId; });
+          if (!def) return;
+
+          if (!opts.skipBubble) addMsg('agent', def.line);
+
+          if (actionId === 'ask_id') {
+            sfx.click();
+            var calmed = opts.preCalmed || state.deescalateCount > 0;
+            if (sc.refusesIdInitially && !calmed && !state.idRevealed) {
+              sfx.warn();
+              addMsg('caller', sc.idRefusal, replyLang);
+              adjustPatience(-8, 'furious');
+              if (state.callOutcome === 'active') speakCaller(sc.idRefusal, 'furious', state.patience, 80, replyLang);
+              return;
+            }
+            if (!state.idRevealed) {
+              state.idRevealed = true;
+              state.idsVerified += 1;
+              state.score += 25;
+            }
+            addMsg('caller', sc.idRes, replyLang);
+            renderGame();
+            speakCaller(sc.idRes, state.mood, state.patience, 80, replyLang);
+          } else if (actionId === 'deescalate') {
+            sfx.calm();
+            var gain = state.deescalateCount === 0 ? 22 : state.deescalateCount === 1 ? 8 : 0;
+            if (state.deescalateCount === 0) state.score += 30;
+            state.deescalateCount += 1;
+            addMsg('caller', sc.calm, replyLang);
+            adjustPatience(gain, 'calm');
+            speakCaller(sc.calm, 'calm', state.patience, 80, replyLang);
+          } else if (actionId === 'check_line') {
+            sfx.diag();
+            state.isCheckingLine = true;
+            renderGame();
+            lineTimer = setTimeout(function () {
+              state.isCheckingLine = false;
+              if (!state.lineChecked) state.score += 25;
+              state.lineChecked = true;
+              addMsg('system', sc.lineCheck);
+              renderGame();
+            }, 1050);
+          } else if (actionId === 'restart_router') {
+            sfx.click();
+            state.reboots += 1;
+            state.isRebooting = true;
+            state.rebootLeft = 10;
+            renderGame();
+            rebootTimer = setInterval(function () {
+              state.rebootLeft -= 1;
+              sfx.tick(state.rebootLeft);
+              renderRouter();
+              if (state.rebootLeft <= 0) {
+                clearInterval(rebootTimer);
+                rebootTimer = null;
+                state.isRebooting = false;
+                sfx.rebootOk();
+                var ok = sc.trueCause === 'restart_router' || sc.also.indexOf('restart_router') !== -1;
+                if (ok) {
+                  var rep = sc.rebootOk || sc.closeOk;
+                  addMsg('caller', rep, replyLang);
+                  speakCaller(rep, 'calm', state.patience, 100, replyLang);
+                  endCall('resolved', sc.fixed);
+                } else {
+                  sfx.warn();
+                  addMsg('caller', sc.rebootFail, replyLang);
+                  var pen = sc.alreadyRestarted ? -24 : sc.lineStatus === 'red_los' ? -16 : -10;
+                  adjustPatience(pen, 'furious');
+                  if (state.callOutcome === 'active') speakCaller(sc.rebootFail, 'furious', state.patience, 100, replyLang);
+                }
+              }
+            }, 280);
+          } else if (actionId === 'reset_port' || actionId === 'explain_billing' || actionId === 'dispatch_tech') {
+            var lineMap = { reset_port: sc.portRes, explain_billing: sc.billRes, dispatch_tech: sc.techRes };
+            var okRes = sc.trueCause === actionId || sc.also.indexOf(actionId) !== -1;
+            if (actionId === 'reset_port') sfx.diag(); else sfx.click();
+            addMsg('caller', lineMap[actionId], replyLang);
+            if (okRes) {
+              speakCaller(lineMap[actionId], 'calm', state.patience, 80, replyLang);
+              endCall('resolved', sc.fixed);
+            } else {
+              sfx.warn();
+              adjustPatience(actionId === 'dispatch_tech' ? -18 : -15, 'furious');
+              if (state.callOutcome === 'active') speakCaller(lineMap[actionId], state.mood, state.patience, 80, replyLang);
+            }
+          } else if (actionId === 'polite_close') {
+            sfx.click();
+            if (sc.trueCause === 'polite_close' && (state.lineChecked || state.idRevealed)) {
+              addMsg('caller', sc.closeOk, replyLang);
+              speakCaller(sc.closeOk, 'calm', state.patience, 80, replyLang);
+              endCall('resolved', sc.fixed);
+            } else {
+              sfx.warn();
+              addMsg('caller', sc.closeBad, replyLang);
+              adjustPatience(-18, 'furious');
+              if (state.callOutcome === 'active') speakCaller(sc.closeBad, 'furious', state.patience, 80, replyLang);
+            }
+          }
+        }
+
+        function processSpokenOrTyped(raw) {
+          var clean = String(raw || '').trim();
+          if (!clean || state.gameState !== 'PLAYING' || state.callOutcome !== 'active' || state.isRebooting || state.isCheckingLine) return;
+          var hasArabic = /[\u0600-\u06FF]/.test(clean);
+          var hasLatin = /[A-Za-z]/.test(clean);
+          var detectedLang = hasArabic ? 'ar' : hasLatin ? 'en' : state.lang;
+          var intents = parseIntents(clean);
+          state.finalHeard = clean;
+          state.interimText = '';
+          if (!intents.length) {
+            state.intents = [];
+            state.unrecognized = true;
+            renderMicUI();
+            return;
+          }
+          state.unrecognized = false;
+          state.intents = intents;
+          addMsg('agent', { en: clean, ar: clean });
+
+          var hasCalm = intents.indexOf('deescalate') !== -1;
+          var tech = intents.filter(function (x) { return x !== 'deescalate'; });
+          if (hasCalm && tech.length > 0) {
+            var gain = state.deescalateCount === 0 ? 22 : state.deescalateCount === 1 ? 8 : 0;
+            if (state.deescalateCount === 0) state.score += 30;
+            state.deescalateCount += 1;
+            sfx.calm();
+            adjustPatience(gain, 'calm');
+            executeAction(tech[0], { skipBubble: true, preCalmed: true, replyLang: detectedLang });
+          } else {
+            executeAction(intents[0], { skipBubble: true, replyLang: detectedLang });
+          }
+        }
+
+        // Simulation Loop (200ms)
+        simTimer = setInterval(function () {
+          var modalOpen = !$('modal-guide').classList.contains('hidden') || !$('modal-audio').classList.contains('hidden') || !$('drawer-history').classList.contains('hidden');
+          if (state.gameState !== 'PLAYING' || modalOpen) return;
+          var dt = 0.2;
+          if (state.shiftMode === 'endless') {
+            state.shiftTime += dt;
+          } else {
+            state.shiftTime = Math.max(0, state.shiftTime - dt);
+            if (state.shiftTime <= 0) {
+              clearTimers();
+              stopSpeaking();
+              stopListening();
+              state.gameState = 'SHIFT_SUMMARY';
+              renderSummary();
+              renderGame();
+              return;
+            }
+          }
+          if (state.callOutcome === 'active') {
+            state.callElapsed += dt;
+            if (!state.isRebooting && !state.isCheckingLine) {
+              var mult = state.mood === 'furious' ? 1.25 : state.mood === 'calm' ? 0.75 : 1.0;
+              state.patience = Math.max(0, state.patience - state.scenario.decay * mult * dt);
+              if (state.patience <= 0) {
+                endCall('dropped');
+                return;
+              }
+            }
+          }
+          renderGame();
+        }, 200);
+
+        // ---------- 9. EVENT WIRING ----------
+        function toggleLang() {
+          sfx.click();
+          stopSpeaking();
+          var wasOn = activeListening;
+          if (wasOn) stopListening();
+          state.lang = state.lang === 'en' ? 'ar' : 'en';
+          renderTexts();
+          if (wasOn && state.continuousMic) startListening(true);
+        }
+
+        function toggleMute() {
+          isMuted = !isMuted;
+          state.muted = isMuted;
+          if (isMuted) stopSpeaking(); else sfx.click();
+          renderTexts();
+        }
+
+        function openAudioModal(isPre) {
+          state.pendingStart = !!isPre;
+          renderTexts();
+          $('modal-audio').classList.remove('hidden');
+        }
+
+        function closeAudioModal(startNow, withVoice) {
+          $('modal-audio').classList.add('hidden');
+          if (typeof withVoice === 'boolean') {
+            state.hasAudioSetup = true;
+            state.voiceEnabled = withVoice;
+          }
+          var shouldStart = state.pendingStart && startNow;
+          state.pendingStart = false;
+          renderSpeakerBar();
+          if (shouldStart) startShift();
+        }
+
+        $('btn-title-lang').onclick = toggleLang;
+        $('btn-lang').onclick = toggleLang;
+        $('btn-title-mute').onclick = toggleMute;
+        $('btn-mute').onclick = toggleMute;
+
+        $('btn-title-guide').onclick = function () { sfx.click(); $('modal-guide').classList.remove('hidden'); };
+        $('btn-guide').onclick = function () { sfx.click(); $('modal-guide').classList.remove('hidden'); };
+        $('mg-close').onclick = function () { $('modal-guide').classList.add('hidden'); };
+        $('mg-ok').onclick = function () { $('modal-guide').classList.add('hidden'); };
+
+        document.querySelectorAll('.mode-btn').forEach(function (btn) {
+          btn.onclick = function () {
+            sfx.click();
+            state.shiftMode = btn.getAttribute('data-mode');
+            document.querySelectorAll('.mode-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+          };
+        });
+
+        $('btn-start-shift').onclick = function () {
+          sfx.click();
+          if (!state.hasAudioSetup) openAudioModal(true);
+          else startShift();
+        };
+
+        $('btn-audio-setup').onclick = function () { sfx.click(); openAudioModal(false); };
+        $('ma-close').onclick = function () { closeAudioModal(false); };
+        $('ma-btn-textonly').onclick = function () { closeAudioModal(true, false); };
+        $('ma-btn-start').onclick = function () { closeAudioModal(true, true); };
+
+        $('ma-btn-test').onclick = function () {
+          speakText(UI[state.lang].testSpeakerPhrase, state.lang, 'calm', 90);
+        };
+
+        $('ma-btn-mic').onclick = function () {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            state.micState = 'unsupported';
+            renderAudioModalStatus();
+            return;
+          }
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+            stream.getTracks().forEach(function (tr) { tr.stop(); });
+            state.micState = SpeechRec ? 'granted' : 'unsupported';
+            renderAudioModalStatus();
+            renderMicUI();
+          }).catch(function () {
+            state.micState = 'denied';
+            renderAudioModalStatus();
+            renderMicUI();
+          });
+        };
+
+        $('btn-pause').onclick = function () {
+          sfx.click();
+          state.gameState = state.gameState === 'PLAYING' ? 'PAUSED' : 'PLAYING';
+          renderGame();
+        };
+        $('mp-resume').onclick = function () {
+          sfx.click();
+          state.gameState = 'PLAYING';
+          renderGame();
+        };
+        $('mp-end').onclick = function () {
+          clearTimers(); stopSpeaking(); stopListening();
+          state.gameState = 'SHIFT_SUMMARY';
+          renderSummary();
+          renderGame();
+        };
+        $('btn-end-shift').onclick = $('mp-end').onclick;
+        $('btn-restart').onclick = startShift;
+        $('ms-again').onclick = startShift;
+        $('ms-back').onclick = function () {
+          clearTimers(); stopSpeaking(); stopListening();
+          state.gameState = 'TITLE_MENU';
+          renderGame();
+        };
+
+        $('btn-history').onclick = function () {
+          sfx.click();
+          renderHistoryDrawer();
+          $('drawer-history').classList.remove('hidden');
+        };
+        $('dh-close').onclick = function () { $('drawer-history').classList.add('hidden'); };
+
+        $('btn-quick-next').onclick = nextCall;
+
+        $('btn-repeat-line').onclick = function () {
+          if (state.lastCallerLine) {
+            speakCaller(state.lastCallerLine.line || state.lastCallerLine, state.mood, state.patience, 0, state.lastCallerLine.lang || state.lang);
+          }
+        };
+        $('btn-voice-toggle').onclick = function () {
+          sfx.click();
+          state.voiceEnabled = !state.voiceEnabled;
+          if (!state.voiceEnabled) stopSpeaking();
+          renderSpeakerBar();
+        };
+
+        // Action clicks via event delegation
+        document.addEventListener('click', function (ev) {
+          var btn = ev.target.closest ? ev.target.closest('[data-action]') : null;
+          if (btn) {
+            executeAction(btn.getAttribute('data-action'));
+          }
+        });
+
+        // Tap-or-Hold Mic button
+        var micHoldBtn = $('btn-mic-hold');
+        function onMicDown() {
+          if (state.callOutcome !== 'active') return;
+          if (state.isListening && !state.continuousMic) {
+            stopListening();
+            micPressTime = 0;
+            return;
+          }
+          micPressTime = Date.now();
+          state.continuousMic = false;
+          startListening(false);
+        }
+        function onMicUp() {
+          if (state.continuousMic || micPressTime === 0) return;
+          if (Date.now() - micPressTime >= 320) stopListening();
+        }
+        micHoldBtn.addEventListener('mousedown', onMicDown);
+        micHoldBtn.addEventListener('mouseup', onMicUp);
+        micHoldBtn.addEventListener('mouseleave', function () {
+          if (!state.continuousMic && state.isListening && micPressTime > 0 && Date.now() - micPressTime >= 320) stopListening();
+        });
+        micHoldBtn.addEventListener('touchstart', function (e) { e.preventDefault(); onMicDown(); });
+        micHoldBtn.addEventListener('touchend', onMicUp);
+
+        $('btn-mic-cont').onclick = function () {
+          if (state.continuousMic || state.isListening) {
+            stopListening();
+          } else {
+            state.continuousMic = true;
+            startListening(true);
+          }
+        };
+
+        $('text-form').onsubmit = function (e) {
+          e.preventDefault();
+          var val = $('text-input').value;
+          if (!val.trim()) return;
+          $('text-input').value = '';
+          processSpokenOrTyped(val);
+        };
+
+        // Keyboard shortcuts
+        window.addEventListener('keydown', function (e) {
+          if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+          if (e.key && e.key.toLowerCase() === 'l') { toggleLang(); return; }
+          if (state.gameState === 'TITLE_MENU') {
+            if (e.key === 'Enter' && $('modal-audio').classList.contains('hidden') && $('modal-guide').classList.contains('hidden')) {
+              e.preventDefault();
+              $('btn-start-shift').click();
+            }
+            return;
+          }
+          if (e.key && (e.key.toLowerCase() === 'p' || e.key === 'Escape')) {
+            e.preventDefault();
+            if (!$('modal-audio').classList.contains('hidden')) closeAudioModal(false);
+            else if (!$('modal-guide').classList.contains('hidden')) $('modal-guide').classList.add('hidden');
+            else if (!$('drawer-history').classList.contains('hidden')) $('drawer-history').classList.add('hidden');
+            else { state.gameState = state.gameState === 'PLAYING' ? 'PAUSED' : 'PLAYING'; renderGame(); }
+            return;
+          }
+          if (state.gameState === 'PLAYING' && $('modal-audio').classList.contains('hidden') && $('modal-guide').classList.contains('hidden')) {
+            if (e.code === 'Space' && !e.repeat && state.callOutcome === 'active') {
+              e.preventDefault();
+              if (!spaceHeld) {
+                spaceHeld = true;
+                state.continuousMic = false;
+                startListening(true);
+              }
+              return;
+            }
+            if (e.key && e.key.toLowerCase() === 'n' && state.callOutcome !== 'active') {
+              e.preventDefault();
+              nextCall();
+              return;
+            }
+            var idx = ['1', '2', '3', '4', '5', '6', '7', '8'].indexOf(e.key);
+            if (idx !== -1 && ACTIONS[idx]) {
+              e.preventDefault();
+              executeAction(ACTIONS[idx].id);
+            }
+          }
+        });
+
+        window.addEventListener('keyup', function (e) {
+          if (e.code === 'Space' && spaceHeld) {
+            spaceHeld = false;
+            stopListening();
+          }
+        });
+        window.addEventListener('blur', function () {
+          if (spaceHeld) { spaceHeld = false; stopListening(); }
+        });
+
+        // Boot
+        renderTexts();
+      })();
+    </script>
   </body>
 </html>
-
